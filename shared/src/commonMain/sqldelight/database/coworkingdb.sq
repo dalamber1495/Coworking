@@ -1,0 +1,36 @@
+CREATE TABLE coworkingEntity(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    timestamp INTEGER NOT NULL,
+    anxietyBefore INTEGER NOT NULL,
+    anxietyAfter INTEGER NOT NULL,
+    idMusic INTEGER NOT NULL
+);
+--
+-- getAllSessions:
+-- SELECT *
+-- FROM sessions;
+--
+-- getSessionById:
+-- SELECT *
+-- FROM sessions
+-- WHERE id = ?;
+--
+-- getSessionsFromDate:
+-- SELECT *
+-- FROM sessions
+-- WHERE timestamp BETWEEN ? AND ?
+-- AND (timestamp = (SELECT MAX(timestamp) FROM sessions WHERE timestamp BETWEEN ? AND ?)) OR (timestamp = (SELECT MIN(timestamp) FROM sessions WHERE timestamp BETWEEN ? AND ?));
+--
+-- insertSession:
+-- INSERT OR REPLACE
+-- INTO sessions(
+--     id,
+--     timestamp,
+--     anxietyBefore,
+--     anxietyAfter,
+--     idMusic
+-- )VALUES (?,?,?,?,?);
+--
+-- deleteSessionById:
+-- DELETE FROM sessions
+-- WHERE id=?;
