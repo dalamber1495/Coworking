@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,10 +43,32 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.1")
-    implementation("androidx.compose.foundation:foundation:1.3.1")
-    implementation("androidx.compose.material:material:1.3.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.compose.ui:ui:1.4.3")
+    implementation("androidx.compose.ui:ui-tooling:1.4.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
+    implementation("androidx.compose.foundation:foundation:1.4.3")
+    implementation("androidx.compose.material:material:1.4.3")
+    implementation("androidx.activity:activity-compose:1.7.1")
+
+    //Koin
+    implementation("io.insert-koin:koin-android:3.3.2")
+    implementation("io.insert-koin:koin-androidx-navigation:3.3.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.1")
+
+    // Coil
+    implementation ("io.coil-kt:coil:2.2.2")
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    //Accompanist
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+    implementation("com.google.accompanist:accompanist-insets:0.27.0")
+    implementation ("com.google.accompanist:accompanist-coil:0.13.0")
+
+    implementation ("androidx.core:core-splashscreen:1.0.0")
+
+        //Hilt
+    implementation("com.google.dagger:hilt-android:2.42")
+    kapt("com.google.dagger:hilt-android-compiler:2.42")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }

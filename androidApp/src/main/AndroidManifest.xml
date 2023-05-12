@@ -4,9 +4,10 @@
     <application
         android:allowBackup="false"
         android:supportsRtl="true"
+        android:name=".CoworkingApplication"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".startScreen.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize"
