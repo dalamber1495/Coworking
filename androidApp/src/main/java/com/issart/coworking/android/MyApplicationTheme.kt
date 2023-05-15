@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.issart.coworking.android.ui.backgroundColor
 
 @Composable
 fun MyApplicationTheme(
@@ -21,16 +22,18 @@ fun MyApplicationTheme(
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
-        darkColors(
+        lightColors(
             primary = Color(0xFFBB86FC),
             primaryVariant = Color(0xFF3700B3),
-            secondary = Color(0xFF03DAC5)
+            secondary = Color(0xFF03DAC5),
+            background = backgroundColor
         )
     } else {
         lightColors(
             primary = Color(0xFF6200EE),
             primaryVariant = Color(0xFF3700B3),
-            secondary = Color(0xFF03DAC5)
+            secondary = Color(0xFF03DAC5),
+            background = backgroundColor
         )
     }
     val typography = Typography(

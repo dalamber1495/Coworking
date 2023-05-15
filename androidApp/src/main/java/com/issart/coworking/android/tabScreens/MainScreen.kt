@@ -24,6 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.issart.coworking.android.navigation.graphs.MainFlowGraph
 import com.issart.coworking.android.navigation.routeObject.MainScreenTabRoute
+import com.issart.coworking.android.ui.activeContentColor
+import com.issart.coworking.android.ui.backgroundFieldColor
+import com.issart.coworking.android.ui.inactiveContentColor
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
@@ -125,21 +128,26 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
-    BottomNavigationItem(modifier = Modifier.background(color = MaterialTheme.colors.primary),
+    BottomNavigationItem(modifier = Modifier
+        .background(color = backgroundFieldColor),
         label = {
-            Text(text = screen.title)
+            Text(text = screen.title, color = activeContentColor)
         },
         alwaysShowLabel = false,
         icon = {
             Icon(
                 imageVector = ImageVector.vectorResource(id = screen.icon),
-                contentDescription = "Navigation Icon"
+                contentDescription = "Navigation Icon",
+                tint = if(currentDestination?.hierarchy?.any {
+                        it.route == screen.route
+                    } == true) activeContentColor else inactiveContentColor
             )
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
         } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        unselectedContentColor = inactiveContentColor,
+        selectedContentColor = Color.Transparent,
         onClick = {
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -161,9 +169,9 @@ fun SelectedOval(width: Dp, animateHeight: Dp) {
                 .size(width = width, height = 30.dp)
         ) {
             drawOval(
-                color = Color(0xFF6200EE),
+                color = backgroundFieldColor,
                 size = Size(width = width.toPx(), height = animateHeight.toPx()),
-                topLeft = Offset(x = 0.dp.toPx(), y = (15.dp - animateHeight/2).toPx())
+                topLeft = Offset(x = 0.dp.toPx(), y = (15.dp - animateHeight / 2).toPx())
 
             )
         }
