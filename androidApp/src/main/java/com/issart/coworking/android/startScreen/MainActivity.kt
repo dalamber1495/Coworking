@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,6 +41,8 @@ class MainActivity : ComponentActivity() {
         val startingGraph = nonLoggedUserGraph
 //            AppScreens.MainAppScreen.route
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             MyApplicationTheme {
                 val navigationController = rememberNavController()
@@ -61,7 +66,8 @@ class MainActivity : ComponentActivity() {
 
                 Box(modifier = Modifier
                     .fillMaxSize()
-                    .background(backgroundColor)) {
+                    .background(backgroundColor)
+                    .statusBarsPadding()) {
                     NavHost(
                         navController = navigationController,
                         route = routeGraph,

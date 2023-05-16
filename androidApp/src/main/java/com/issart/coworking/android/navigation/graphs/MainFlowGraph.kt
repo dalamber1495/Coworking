@@ -11,6 +11,7 @@ import com.issart.coworking.android.navigation.routeObject.AppScreens
 import com.issart.coworking.android.navigation.routeObject.MainScreenTabRoute
 import com.issart.coworking.android.navigation.routeObject.loggedUserGraph
 import com.issart.coworking.android.navigation.routeObject.mainGraph
+import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.view.HomeScreen
 
 @Composable
 fun MainFlowGraph(navController: NavHostController) {
@@ -21,6 +22,8 @@ fun MainFlowGraph(navController: NavHostController) {
         startDestination = MainScreenTabRoute.HomeTab.route
     ){
         composable(route = MainScreenTabRoute.HomeTab.route) {
+
+            HomeScreen()
 
         }
         composable(route = MainScreenTabRoute.LikeTab.route) {

@@ -35,8 +35,6 @@ sealed class AppScreens(
         options = NavOptions.Builder().setPopUpTo(0, false).build()
     )
 
-    object Route
-
     object MainAppScreen: AppScreens(
         route = mainScreenRoute,
         options = NavOptions.Builder().setPopUpTo(0, false).build()

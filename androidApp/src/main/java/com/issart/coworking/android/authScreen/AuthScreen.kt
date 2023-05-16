@@ -50,18 +50,18 @@ fun AuthScreen(
         )
 
         Column(
-            modifier = Modifier.width(323.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoworkingTextField(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = "Email",
                 valueCallback = {},
                 leadingIcon = com.issart.coworking.android.R.drawable.ic_email
             )
             CoworkingTextField(
-                modifier = Modifier.width(323.dp),
+                modifier = Modifier.fillMaxWidth(),
                 placeHolder = "Пароль",
                 valueCallback = {},
                 leadingIcon = com.issart.coworking.android.R.drawable.password
@@ -69,7 +69,7 @@ fun AuthScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 modifier = Modifier
-                    .width(323.dp)
+                    .fillMaxWidth()
                     .height(50.dp)
                     .indication(remember { MutableInteractionSource() }, null),
                 onClick = {
@@ -88,7 +88,8 @@ fun AuthScreen(
         }
         Button(
             modifier = Modifier
-                .width(323.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 26.dp)
                 .height(50.dp)
                 .indication(remember { MutableInteractionSource() }, null),
             onClick = { /*TODO*/ },
@@ -103,7 +104,7 @@ fun AuthScreen(
         }
 
         Row(
-            modifier = Modifier.width(323.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -3,10 +3,18 @@ package com.issart.coworking.android.tabScreens
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -14,6 +22,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
@@ -31,7 +40,12 @@ import com.issart.coworking.android.ui.inactiveContentColor
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
 
-    Scaffold(bottomBar = { BottomBar(navController = navController) }) {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        bottomBar = { BottomBar(navController = navController) }) {
         it
         MainFlowGraph(navController = navController)
     }
@@ -55,7 +69,7 @@ fun BottomBar(navController: NavHostController) {
     val animateHome = animateDpAsState(
         targetValue = if (currentDestination?.hierarchy?.any {
                 it.route == MainScreenTabRoute.HomeTab.route
-            } == true) 30.dp else 0.dp,
+            } == true) 40.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 300,
             easing = LinearEasing
@@ -64,7 +78,7 @@ fun BottomBar(navController: NavHostController) {
     val animateLike = animateDpAsState(
         targetValue = if (currentDestination?.hierarchy?.any {
                 it.route == MainScreenTabRoute.LikeTab.route
-            } == true) 30.dp else 0.dp,
+            } == true) 40.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 300,
             easing = LinearEasing
@@ -73,7 +87,7 @@ fun BottomBar(navController: NavHostController) {
     val animateProfile = animateDpAsState(
         targetValue = if (currentDestination?.hierarchy?.any {
                 it.route == MainScreenTabRoute.ProfileTab.route
-            } == true) 30.dp else 0.dp,
+            } == true) 40.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 300,
             easing = LinearEasing
@@ -82,7 +96,7 @@ fun BottomBar(navController: NavHostController) {
     val animateOrder = animateDpAsState(
         targetValue = if (currentDestination?.hierarchy?.any {
                 it.route == MainScreenTabRoute.OrderTab.route
-            } == true) 30.dp else 0.dp,
+            } == true) 40.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 300,
             easing = LinearEasing
@@ -105,18 +119,19 @@ fun BottomBar(navController: NavHostController) {
                 SelectedOval(width = sizeItem, animateHeight = animateProfile.value)
                 SelectedOval(width = sizeItem, animateHeight = animateOrder.value)
             }
-            BottomNavigation(
-                modifier = Modifier, backgroundColor = Color.Transparent, elevation = 0.dp
-            ) {
-                screens.forEach { screen ->
-                    AddItem(
-                        screen = screen,
-                        currentDestination = currentDestination,
-                        navController = navController
-                    )
+                BottomNavigation(
+                    modifier = Modifier, backgroundColor = Color.Transparent, elevation = 0.dp
+                ) {
+                    screens.forEach { screen ->
+                        AddItem(
+                            screen = screen,
+                            currentDestination = currentDestination,
+                            navController = navController
+                        )
+                    }
+
                 }
 
-            }
 
         }
     }
@@ -128,32 +143,35 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
-    BottomNavigationItem(modifier = Modifier
-        .background(color = backgroundFieldColor),
-        label = {
-            Text(text = screen.title, color = activeContentColor)
-        },
-        alwaysShowLabel = false,
-        icon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = screen.icon),
-                contentDescription = "Navigation Icon",
-                tint = if(currentDestination?.hierarchy?.any {
-                        it.route == screen.route
-                    } == true) activeContentColor else inactiveContentColor
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = inactiveContentColor,
-        selectedContentColor = Color.Transparent,
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        })
+
+
+        BottomNavigationItem(modifier = Modifier
+            .background(color = backgroundFieldColor),
+            label = {
+                Text(text = screen.title, color = activeContentColor)
+            },
+            alwaysShowLabel = false,
+            icon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = screen.icon),
+                    contentDescription = "Navigation Icon",
+                    tint = if (currentDestination?.hierarchy?.any {
+                            it.route == screen.route
+                        } == true) activeContentColor else inactiveContentColor
+                )
+            },
+            selected = currentDestination?.hierarchy?.any {
+                it.route == screen.route
+            } == true,
+            unselectedContentColor = inactiveContentColor,
+            selectedContentColor = backgroundFieldColor,
+            onClick = {
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                }
+            })
+
 }
 
 @Composable

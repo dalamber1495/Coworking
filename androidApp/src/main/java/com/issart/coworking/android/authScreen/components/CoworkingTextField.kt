@@ -97,12 +97,13 @@ fun CoworkingTextField(
                 textStyle = textPlaceHolderTextStyle,
                 placeholder = {
                         Text(
+                            modifier = Modifier.height(40.dp),
                             text = placeHolder,
                             style = textPlaceHolderTextStyle,
                             color = inactiveContentColor
                         )
                 },
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 singleLine = true,
                 visualTransformation = visualTransformation,
                 keyboardOptions = keyboardOptions,
