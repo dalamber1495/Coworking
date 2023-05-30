@@ -56,17 +56,17 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:3.4.1")
 
     // Coil
-    implementation ("io.coil-kt:coil:2.2.2")
+    implementation("io.coil-kt:coil:2.2.2")
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     //Accompanist
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
     implementation("com.google.accompanist:accompanist-insets:0.27.0")
-    implementation ("com.google.accompanist:accompanist-coil:0.13.0")
+    implementation("com.google.accompanist:accompanist-coil:0.13.0")
 
-    implementation ("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
-        //Hilt
+    //Hilt
     implementation("com.google.dagger:hilt-android:2.42")
     kapt("com.google.dagger:hilt-android-compiler:2.42")
     kapt("androidx.hilt:hilt-compiler:1.0.0")

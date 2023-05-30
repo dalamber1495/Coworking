@@ -70,8 +70,8 @@ fun CoworkingTextField(
                 .shadow(elevation = 0.dp, shape = RoundedCornerShape(12.dp))
         ) {
             OutlinedTextField(
-                modifier = modifier
-                    .width(323.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(48.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = backgroundFieldColor,

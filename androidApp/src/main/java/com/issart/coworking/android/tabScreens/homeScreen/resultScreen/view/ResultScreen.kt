@@ -2,7 +2,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.issart.coworking.android.tabScreens.homeScreen.components.RoomItem
+import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.components.FilterField
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultState
@@ -159,7 +159,9 @@ fun ResultScreen(
                 Column(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                 ) {
-                    RoomItem(modifier = Modifier, room = state.value.rooms[id])
+                    RoomItem(modifier = Modifier, room = state.value.rooms[id]){
+                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(id))
+                    }
                     if(id == state.value.rooms.size-1)
                         Spacer(modifier = Modifier.height(100.dp))
                 }
