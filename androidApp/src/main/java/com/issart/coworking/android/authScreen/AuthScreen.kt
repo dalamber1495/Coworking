@@ -6,31 +6,43 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.issart.coworking.android.authScreen.components.CoworkingTextField
+import com.issart.coworking.android.authScreen.model.AuthUiEvent
+import com.issart.coworking.android.authScreen.viewModels.AuthScreenViewModel
 import com.issart.coworking.android.navigation.routeObject.AppScreens
 import com.issart.coworking.android.navigation.routeObject.routeGraph
 import com.issart.coworking.android.ui.*
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AuthScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: AuthScreenViewModel = koinViewModel()
 ) {
 
 
+    val state = viewModel.state.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,21 +62,44 @@ fun AuthScreen(
         )
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 26.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
             CoworkingTextField(
                 modifier = Modifier.fillMaxWidth(),
                 placeHolder = "Email",
-                valueCallback = {},
-                leadingIcon = com.issart.coworking.android.R.drawable.ic_email
+                text = state.value.email,
+                valueCallback = { viewModel.onEvent(AuthUiEvent.SetEmail(it)) },
+                leadingIcon = com.issart.coworking.android.R.drawable.ic_email,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                validationValue = state.value.validationEmail
             )
+            Spacer(modifier = Modifier.height(20.dp))
             CoworkingTextField(
                 modifier = Modifier.fillMaxWidth(),
                 placeHolder = "Пароль",
-                valueCallback = {},
-                leadingIcon = com.issart.coworking.android.R.drawable.password
+                valueCallback = { viewModel.onEvent(AuthUiEvent.SetPassword(it)) },
+                text = state.value.password,
+                leadingIcon = com.issart.coworking.android.R.drawable.password,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    navHostController.navigate(
+                        AppScreens.MainAppScreen.route,
+                        NavOptions.Builder().setPopUpTo(routeGraph, true).build()
+                    )
+                }),
+                visualTransformation = PasswordVisualTransformation(),
+                validationValue = state.value.validationPassword
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
@@ -75,7 +110,8 @@ fun AuthScreen(
                 onClick = {
                     navHostController.navigate(
                         AppScreens.MainAppScreen.route,
-                        NavOptions.Builder().setPopUpTo(routeGraph,true).build())
+                        NavOptions.Builder().setPopUpTo(routeGraph, true).build()
+                    )
                 },
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -104,7 +140,9 @@ fun AuthScreen(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 26.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 26.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

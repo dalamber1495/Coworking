@@ -1,5 +1,8 @@
 package com.issart.coworking.android.authScreen.components
 
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,6 +23,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.issart.coworking.android.MyApplicationTheme
+import com.issart.coworking.android.authScreen.model.ValidationState
 import com.issart.coworking.android.ui.activeContentColor
 import com.issart.coworking.android.ui.backgroundFieldColor
 import com.issart.coworking.android.ui.inactiveContentColor
@@ -32,12 +36,15 @@ fun CoworkingTextField(
     text: String = "",
     placeHolder: String,
     visibleIcon: Boolean = false,
-    validationValue: UiText = UiText.EmptyString,
+    validationValue: ValidationState = ValidationState.EMPTY,
     valueCallback: (String) -> Unit,
     maxLenght: Int? = null,
     leadingIcon: Int? = null,
+    readOnly :Boolean= false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onClick:()->Unit = {}
 ) {
 
 
@@ -45,32 +52,24 @@ fun CoworkingTextField(
         mutableStateOf(!visibleIcon)
     }
 
-    val visualTransformation =
-        if (visibleText.value) VisualTransformation.None else PasswordVisualTransformation()
-
     val borderColor =
         when (validationValue) {
-            is UiText.EmptyString -> Color.Transparent
-            is UiText.SuccessValidation -> Color.Green
-            else -> Color.Red
+            ValidationState.EMPTY -> Color.Transparent
+            ValidationState.SUCCESS -> Color.Green
+            ValidationState.ERROR -> Color.Red
         }
     Column(
         modifier = modifier
     ) {
-        Text(
-            modifier = Modifier
-                .height(20.dp)
-                .padding(start = 8.dp, bottom = 4.dp),
-            text = placeHolder,
-            style = textPlaceHolderTextStyle,
-            color = if (text.isEmpty()) Color.Transparent else inactiveContentColor
-        )
         Box(
             modifier = Modifier
                 .shadow(elevation = 0.dp, shape = RoundedCornerShape(12.dp))
         ) {
             OutlinedTextField(
                 modifier = Modifier
+                    .clickable(interactionSource = remember {
+                        MutableInteractionSource()
+                    }, indication = null, onClick = onClick)
                     .fillMaxWidth()
                     .height(48.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -79,6 +78,8 @@ fun CoworkingTextField(
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = activeContentColor
                 ),
+                readOnly = readOnly,
+                enabled = !readOnly,
                 value = text,
                 onValueChange = {
                     if (it.length <= (maxLenght ?: 100)) valueCallback.invoke(

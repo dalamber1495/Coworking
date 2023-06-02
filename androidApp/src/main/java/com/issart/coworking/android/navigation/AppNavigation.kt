@@ -1,15 +1,17 @@
 package com.issart.coworking.android.navigation
 
 import com.issart.coworking.android.navigation.routeObject.AppScreens
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 class AppNavigation {
     private val _navRoute =
-        MutableSharedFlow<AppScreens>(extraBufferCapacity = 1)
-    val navRoute = _navRoute.asSharedFlow()
+        Channel<AppScreens>(capacity = 1)
+    val navRoute = _navRoute.receiveAsFlow()
 
     fun navigateTo(destination: AppScreens) {
-        _navRoute.tryEmit(destination)
+        _navRoute.trySend(destination)
     }
 }

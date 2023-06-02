@@ -66,6 +66,12 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.0")
 
+    val dateTimeVersion = "1.1.1"
+    //DateTime Pickers
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:core:$dateTimeVersion")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:$dateTimeVersion")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:clock:$dateTimeVersion")
+
     //Hilt
     implementation("com.google.dagger:hilt-android:2.42")
     kapt("com.google.dagger:hilt-android-compiler:2.42")
