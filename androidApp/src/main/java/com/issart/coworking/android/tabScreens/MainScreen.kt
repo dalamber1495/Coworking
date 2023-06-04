@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.issart.coworking.android.navigation.graphs.MainFlowGraph
 import com.issart.coworking.android.navigation.routeObject.MainScreenTabRoute
 import com.issart.coworking.android.ui.activeContentColor
+import com.issart.coworking.android.ui.backgroundColor
 import com.issart.coworking.android.ui.backgroundFieldColor
 import com.issart.coworking.android.ui.inactiveContentColor
 
@@ -45,6 +46,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
+        backgroundColor = backgroundColor,
         bottomBar = { BottomBar(navController = navController) }) {
         it
         MainFlowGraph(navController = navController)
