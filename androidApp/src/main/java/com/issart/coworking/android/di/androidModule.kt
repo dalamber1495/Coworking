@@ -28,7 +28,7 @@ val androidModule = module {
     single <SetFiltersResult>{SetFiltersResultImpl()  }
 
     viewModel { MapViewModel(get())}
-    viewModel { ResultScreenViewModel(get()) }
+    viewModel { ResultScreenViewModel(get(), get()) }
     viewModel { DetailScreenViewModel() }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }

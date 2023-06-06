@@ -18,14 +18,14 @@ import com.issart.coworking.android.ui.*
 fun NumberPickerDialog(
     onDismissRequest: () -> Unit,
     value: Int,
-    onEvent: (SearchScreenUiEvents) -> Unit
+    onEvent: (Int) -> Unit
 ) {
 
     Dialog(onDismissRequest = onDismissRequest) {
         AndroidView(factory = { context ->
             NumberPicker(context).apply {
                 setOnValueChangedListener{picker, old, new ->
-                    onEvent.invoke(SearchScreenUiEvents.SetPeoplePicker(new))
+                    onEvent.invoke(new)
                 }
                 this.maxValue = 40
                 this.minValue = 1

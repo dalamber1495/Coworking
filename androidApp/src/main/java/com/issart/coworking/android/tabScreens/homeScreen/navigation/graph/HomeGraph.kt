@@ -40,7 +40,7 @@ fun HomeGraph(navController: NavHostController) {
         composable(route = HomeScreens.ResultScreenRoute.route) {
 
             val viewModel = koinViewModel<ResultScreenViewModel>()
-            ResultScreen(navController, viewModel.state, viewModel::onEvent)
+            ResultScreen(navController, viewModel.state, viewModel::onEvent, viewModel.filterOnBottomSheet)
 
         }
         composable(

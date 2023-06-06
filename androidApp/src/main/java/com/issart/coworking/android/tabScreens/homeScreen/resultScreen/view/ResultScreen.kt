@@ -1,44 +1,90 @@
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.issart.coworking.android.tabScreens.homeScreen.components.RoomItem
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
+import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.components.BottomFilterSheet
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.components.FilterField
+import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.FilterUiState
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultState
+import com.issart.coworking.android.ui.backgroundColor
 import com.issart.coworking.android.ui.fontDescriptionColor
 import com.issart.coworking.android.ui.inactiveContentColor
 import com.issart.coworking.android.ui.sourcesanspro
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ResultScreen(
     navController: NavHostController,
     stateFlow: StateFlow<ResultState>,
-    onEvent: (ResultScreenEvents) -> Unit
+    onEvent: (ResultScreenEvents) -> Unit,
+    filterBottomSheetState:StateFlow<FilterUiState>
 ) {
 
 
     val state = stateFlow.collectAsState()
+    val filterSheetState = filterBottomSheetState.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+
+    val lifecycle = remember {
+        mutableStateOf(Lifecycle.Event.ON_CREATE)
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycle.value = event
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            scope.cancel()
+        }
+    }
+
+    val sheetFilterState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scaffoldFilterState = rememberBottomSheetScaffoldState(bottomSheetState = sheetFilterState)
+    BottomSheetScaffold(
+        sheetContent = {
+            BottomFilterSheet(filterSheetState, onEvent, navController){
+                scope.launch {
+                    sheetFilterState.collapse()
+                }
+            }
+        },
+        scaffoldState = scaffoldFilterState,
+        floatingActionButtonPosition = FabPosition.Center,
+        sheetShape = RoundedCornerShape(topEnd = 0.dp, topStart = 0.dp),
+        sheetBackgroundColor = Color.Unspecified,
+        backgroundColor = backgroundColor,
+        sheetElevation = 0.dp,
+    ) {
+        Column {
         Column(
             modifier = Modifier
                 .padding(horizontal = 25.dp),
@@ -70,6 +116,16 @@ fun ResultScreen(
                     )
                 }
                 Icon(
+                    modifier = Modifier.clickable(interactionSource = remember {
+                        MutableInteractionSource()
+                    }, indication = null, onClick = {
+                        scope.launch {
+                            if (sheetFilterState.isCollapsed)
+                                sheetFilterState.expand()
+                            else
+                                sheetFilterState.collapse()
+                        }
+                    }),
                     imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_filter),
                     contentDescription = null,
                     tint = inactiveContentColor
@@ -125,30 +181,30 @@ fun ResultScreen(
 
                 }
                 state.value.filters.roomFilter?.let {
-                    if(it)
-                    FilterField(text = "Отдельная комната") {
-                        onEvent.invoke(
-                            ResultScreenEvents.SetFilter(
-                                state.value.filters.copy(
-                                    roomFilter = null
+                    if (it)
+                        FilterField(text = "Отдельная комната") {
+                            onEvent.invoke(
+                                ResultScreenEvents.SetFilter(
+                                    state.value.filters.copy(
+                                        roomFilter = null
+                                    )
                                 )
                             )
-                        )
-                    }
+                        }
 //                Spacer(modifier = Modifier.width(12.dp))
 
                 }
                 state.value.filters.multimediaFilter?.let {
                     if (it)
-                    FilterField(text = "Мультимедиа") {
-                        onEvent.invoke(
-                            ResultScreenEvents.SetFilter(
-                                state.value.filters.copy(
-                                    multimediaFilter = null
+                        FilterField(text = "Мультимедиа") {
+                            onEvent.invoke(
+                                ResultScreenEvents.SetFilter(
+                                    state.value.filters.copy(
+                                        multimediaFilter = null
+                                    )
                                 )
                             )
-                        )
-                    }
+                        }
                 }
             }
         }
@@ -161,14 +217,15 @@ fun ResultScreen(
                 Column(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                 ) {
-                    RoomItem(modifier = Modifier, room = state.value.rooms[id]){
+                    RoomItem(modifier = Modifier, room = state.value.rooms[id]) {
                         navController.navigate(HomeScreens.DetailScreenRoute.createRoute(id))
                     }
-                    if(id == state.value.rooms.size-1)
+                    if (id == state.value.rooms.size - 1)
                         Spacer(modifier = Modifier.height(100.dp))
                 }
             }
         }
+    }
     }
 
 }

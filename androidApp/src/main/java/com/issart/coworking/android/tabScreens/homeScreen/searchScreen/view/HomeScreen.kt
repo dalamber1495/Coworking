@@ -13,15 +13,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.issart.coworking.android.R
-import com.issart.coworking.android.authScreen.components.CoworkingTextField
+import com.issart.coworking.android.tabScreens.homeScreen.components.FilterFields
 import com.issart.coworking.android.tabScreens.homeScreen.components.NumberPickerDialog
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.graph.HomeGraph
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
@@ -139,122 +136,32 @@ fun SearchScreen(
                     .padding(horizontal = 26.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                CoworkingTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    readOnly = true,
-                    placeHolder = "Дата",
-                    text = state.value.date.format(DateTimeFormatter.ofPattern("EEE, d MMM. yyyy")),
-                    valueCallback = {},
-                    leadingIcon = com.issart.coworking.android.R.drawable.ic_calendar,
-                    onClick = {
-                        calendarStates.show()
-                    }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Row {
-                    CoworkingTextField(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .padding(end = 8.dp),
-                        placeHolder = "Время",
-                        readOnly = true,
-                        text = "С ${state.value.timeStart}",
-                        valueCallback = {},
-                        leadingIcon = com.issart.coworking.android.R.drawable.ic_clock,
-                        onClick = {
-                            clockStartStates.show()
-                        }
-                    )
-                    CoworkingTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp),
-                        placeHolder = "Время",
-                        readOnly = true,
-                        text = "До ${state.value.timeEnd}",
-                        valueCallback = {},
-                        leadingIcon = com.issart.coworking.android.R.drawable.ic_clock,
-                        onClick = {
-                            clockEndStates.show()
-                        }
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
-                CoworkingTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    placeHolder = "Кол-во человек",
-                    readOnly = true,
-                    text = "Кол-во человек: ${state.value.people}",
-                    valueCallback = {},
-                    leadingIcon = com.issart.coworking.android.R.drawable.ic_people,
-                    onClick = {
-                        numberPickerShow.value = true
-                    }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    CoworkingTextField(
-                        modifier = Modifier
-                            .height(72.dp)
-                            .weight(0.5f),
-                        placeHolder = stringResource(R.string.place_button),
-                        readOnly = true,
-                        text = state.value.geoCoding,
-                        valueCallback = {},
-                        leadingIcon = R.drawable.ic_pin,
-                        onClick = {
-                            navController.navigate(HomeScreens.MapScreenRoute.route)
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(height = 52.dp, width = 64.dp)
-                            .background(
-                                color = backgroundFieldColor,
-                                shape = RoundedCornerShape(12.dp)
+                FilterFields(
+                    dateText = state.value.date.format(DateTimeFormatter.ofPattern("EEE, d MMM. yyyy")),
+                    calendarStates = calendarStates,
+                    timeStartText = state.value.timeStart.toString(),
+                    timeEndText = state.value.timeEnd.toString(),
+                    clockStartStates = clockStartStates,
+                    clockEndStates = clockEndStates,
+                    numberPickerShow = numberPickerShow,
+                    peopleText = state.value.people.toString(),
+                    navController = navController,
+                    geoCodeText = state.value.geoCoding,
+                    singleRoomButton = { viewModel.onEvent(SearchScreenUiEvents.SetRoom) },
+                    multimediaButton = { viewModel.onEvent(SearchScreenUiEvents.SetMultimedia) },
+                    singleRoom = state.value.room,
+                    multimedia = state.value.multimedia,
+                    selectedDate = state.value.date,
+                    setDateCallback = { viewModel.onEvent(SearchScreenUiEvents.SetDatePicker(it)) },
+                    setNumberPeopleCallback = {
+                        viewModel.onEvent(
+                            SearchScreenUiEvents.SetPeoplePicker(
+                                it
                             )
-                            .clickable(
-                                interactionSource = remember {
-                                    MutableInteractionSource()
-                                },
-                                indication = null,
-                                onClick = { viewModel.onEvent(SearchScreenUiEvents.SetRoom) }),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_door),
-                            contentDescription = null,
-                            tint = if (state.value.room) activeContentColor else inactiveContentColor
                         )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(height = 52.dp, width = 64.dp)
-                            .background(
-                                color = backgroundFieldColor,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .clickable(
-                                interactionSource = remember {
-                                    MutableInteractionSource()
-                                },
-                                indication = null,
-                                onClick = { viewModel.onEvent(SearchScreenUiEvents.SetMultimedia) }),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_monitor),
-                            contentDescription = null,
-                            tint = if (state.value.multimedia) activeContentColor else inactiveContentColor
-                        )
-                    }
-                }
+                    },
+                    numberPeople = state.value.people
+                )
 
                 Spacer(modifier = Modifier.height(39.dp))
 
@@ -302,7 +209,7 @@ fun SearchScreen(
             NumberPickerDialog(
                 onDismissRequest = { numberPickerShow.value = false },
                 value = state.value.people,
-                onEvent = viewModel::onEvent
+                onEvent = { viewModel.onEvent(SearchScreenUiEvents.SetPeoplePicker(it)) }
             )
 
 
