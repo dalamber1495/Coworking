@@ -7,6 +7,7 @@ const val searchScreenRoute = "searchScreenRoute"
 const val resultScreenRoute = "resultScreenRoute"
 const val detailScreenRoute = "detailScreenRoute"
 const val payScreenRoute = "payScreenRoute"
+const val mapScreenRoute = "mapScreenRoute"
 const val roomId = "roomId"
 
 sealed class HomeScreens(
@@ -19,6 +20,10 @@ sealed class HomeScreens(
     object SearchScreenRoute : HomeScreens(
         route = searchScreenRoute,
         options = NavOptions.Builder().setPopUpTo(0, inclusive = false).build()
+    )
+
+    object MapScreenRoute:HomeScreens(
+        route = mapScreenRoute
     )
 
     object ResultScreenRoute : HomeScreens(route = resultScreenRoute)

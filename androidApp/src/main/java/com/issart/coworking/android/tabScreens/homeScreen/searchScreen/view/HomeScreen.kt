@@ -1,6 +1,5 @@
 package com.issart.coworking.android.tabScreens.homeScreen.searchScreen.view
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -13,22 +12,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.issart.coworking.android.MyApplicationTheme
+import com.issart.coworking.android.R
 import com.issart.coworking.android.authScreen.components.CoworkingTextField
+import com.issart.coworking.android.tabScreens.homeScreen.components.NumberPickerDialog
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.graph.HomeGraph
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.model.SearchScreenUiEvents
 import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.viewModel.SearchScreenViewModel
 import com.issart.coworking.android.ui.*
-import com.maxkeppeker.sheets.core.models.base.Header
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -58,13 +57,22 @@ fun SearchScreen(
 
     val state = viewModel.state.collectAsState()
 
+    val numberPickerShow = remember { mutableStateOf(false) }
     val calendarStates = rememberUseCaseState()
     val clockStartStates = rememberUseCaseState()
     val clockEndStates = rememberUseCaseState()
     ClockDialog(
         state = clockStartStates,
         selection = ClockSelection.HoursMinutes { hours, minutes ->
-            viewModel.onEvent(SearchScreenUiEvents.SetTimeStartPicker( LocalTime.of(hours, minutes, 0)))
+            viewModel.onEvent(
+                SearchScreenUiEvents.SetTimeStartPicker(
+                    LocalTime.of(
+                        hours,
+                        minutes,
+                        0
+                    )
+                )
+            )
         },
         config = ClockConfig(
             defaultTime = state.value.timeStart,
@@ -74,7 +82,15 @@ fun SearchScreen(
     ClockDialog(
         state = clockEndStates,
         selection = ClockSelection.HoursMinutes { hours, minutes ->
-            viewModel.onEvent(SearchScreenUiEvents.SetTimeEndPicker( LocalTime.of(hours, minutes, 0)))
+            viewModel.onEvent(
+                SearchScreenUiEvents.SetTimeEndPicker(
+                    LocalTime.of(
+                        hours,
+                        minutes,
+                        0
+                    )
+                )
+            )
         },
         config = ClockConfig(
             defaultTime = state.value.timeEnd,
@@ -143,7 +159,7 @@ fun SearchScreen(
                             .padding(end = 8.dp),
                         placeHolder = "Время",
                         readOnly = true,
-                        text = state.value.timeStart.toString(),
+                        text = "С ${state.value.timeStart}",
                         valueCallback = {},
                         leadingIcon = com.issart.coworking.android.R.drawable.ic_clock,
                         onClick = {
@@ -156,7 +172,7 @@ fun SearchScreen(
                             .padding(start = 8.dp),
                         placeHolder = "Время",
                         readOnly = true,
-                        text = state.value.timeEnd.toString(),
+                        text = "До ${state.value.timeEnd}",
                         valueCallback = {},
                         leadingIcon = com.issart.coworking.android.R.drawable.ic_clock,
                         onClick = {
@@ -168,8 +184,13 @@ fun SearchScreen(
                 CoworkingTextField(
                     modifier = Modifier.fillMaxWidth(),
                     placeHolder = "Кол-во человек",
+                    readOnly = true,
+                    text = "Кол-во человек: ${state.value.people}",
                     valueCallback = {},
-                    leadingIcon = com.issart.coworking.android.R.drawable.ic_people
+                    leadingIcon = com.issart.coworking.android.R.drawable.ic_people,
+                    onClick = {
+                        numberPickerShow.value = true
+                    }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
@@ -180,9 +201,14 @@ fun SearchScreen(
                         modifier = Modifier
                             .height(72.dp)
                             .weight(0.5f),
-                        placeHolder = "Место",
+                        placeHolder = stringResource(R.string.place_button),
+                        readOnly = true,
+                        text = state.value.geoCoding,
                         valueCallback = {},
-                        leadingIcon = com.issart.coworking.android.R.drawable.ic_pin
+                        leadingIcon = R.drawable.ic_pin,
+                        onClick = {
+                            navController.navigate(HomeScreens.MapScreenRoute.route)
+                        }
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Box(
@@ -191,13 +217,19 @@ fun SearchScreen(
                             .background(
                                 color = backgroundFieldColor,
                                 shape = RoundedCornerShape(12.dp)
-                            ),
+                            )
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = null,
+                                onClick = { viewModel.onEvent(SearchScreenUiEvents.SetRoom) }),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            painter = painterResource(id = com.issart.coworking.android.R.drawable.ic_door),
+                            painter = painterResource(id = R.drawable.ic_door),
                             contentDescription = null,
-                            tint = activeContentColor
+                            tint = if (state.value.room) activeContentColor else inactiveContentColor
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
@@ -207,13 +239,19 @@ fun SearchScreen(
                             .background(
                                 color = backgroundFieldColor,
                                 shape = RoundedCornerShape(12.dp)
-                            ),
+                            )
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = null,
+                                onClick = { viewModel.onEvent(SearchScreenUiEvents.SetMultimedia) }),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            painter = painterResource(id = com.issart.coworking.android.R.drawable.ic_monitor),
+                            painter = painterResource(id = R.drawable.ic_monitor),
                             contentDescription = null,
-                            tint = activeContentColor
+                            tint = if (state.value.multimedia) activeContentColor else inactiveContentColor
                         )
                     }
                 }
@@ -226,6 +264,7 @@ fun SearchScreen(
                         .height(50.dp)
                         .indication(remember { MutableInteractionSource() }, null),
                     onClick = {
+                        viewModel.onEvent(SearchScreenUiEvents.ClickFindButton)
                         navController.navigate(
                             HomeScreens.ResultScreenRoute.route
                         )
@@ -244,18 +283,28 @@ fun SearchScreen(
 
 
         }
+        val timeBoundary = LocalDate.now().let { now -> now..now.plusYears(2) }
 
-            CalendarDialog(
-                state = calendarStates,
-                config = CalendarConfig(
-                    yearSelection = true,
-                    monthSelection = true,
-                    style = CalendarStyle.MONTH,
-                ),
-                selection = CalendarSelection.Date(selectedDate = state.value.date) { newDate ->
-                    viewModel.onEvent(SearchScreenUiEvents.SetDatePicker(newDate))
-                }
+        CalendarDialog(
+            state = calendarStates,
+            config = CalendarConfig(
+                yearSelection = true,
+                monthSelection = true,
+                style = CalendarStyle.MONTH,
+                boundary = timeBoundary
+            ),
+            selection = CalendarSelection.Date(selectedDate = state.value.date) { newDate ->
+                viewModel.onEvent(SearchScreenUiEvents.SetDatePicker(newDate))
+            }
+        )
+
+        if (numberPickerShow.value)
+            NumberPickerDialog(
+                onDismissRequest = { numberPickerShow.value = false },
+                value = state.value.people,
+                onEvent = viewModel::onEvent
             )
+
 
     }
 

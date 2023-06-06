@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.issart.coworking.android.R
+import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.FilterUiState
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultState
@@ -11,30 +12,24 @@ import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.Room
 import kotlinx.coroutines.flow.*
 import java.time.OffsetDateTime
 
-class ResultScreenViewModel : ViewModel() {
+class ResultScreenViewModel(
+    private val setFiltersResult: SetFiltersResult
+) : ViewModel() {
 
     private val _filter = MutableStateFlow(FilterUiState())
-    private val _rooms = _filter.flatMapLatest {
-        getRoomsByFilters(it)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-
     private val _state = MutableStateFlow(ResultState())
-    val state = combine(_state, _rooms, _filter) { state, rooms, filter ->
-        state.copy(rooms = rooms, filters = filter)
+    val state = combine(_state, _filter) { state, filter ->
+        state.copy(rooms = state.rooms.filter { it.doesMatchFilter(filter) }, filters = filter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ResultState())
 
     init {
-        onEvent(
-            ResultScreenEvents.SetFilter(
-                FilterUiState(
-                    dateFilter = OffsetDateTime.now(),
-                    timeFilter = Pair(OffsetDateTime.now().minusHours(2L), OffsetDateTime.now()),
-                    peopleFilter = 6,
-                    roomFilter = true,
-                    multimediaFilter = true
-                )
-            )
-        )
+        setFiltersResult.filters.onEach {
+            _filter.emit(it)
+        }.launchIn(viewModelScope)
+
+        getRooms().onEach {
+            _state.emit(_state.value.copy(rooms = it))
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: ResultScreenEvents) {
@@ -45,7 +40,7 @@ class ResultScreenViewModel : ViewModel() {
         }
     }
 
-    private fun getRoomsByFilters(state: FilterUiState): Flow<List<RoomUiState>> {
+    private fun getRooms(): Flow<List<RoomUiState>> {
         return flow {
             val mutaList = mutableListOf<RoomUiState>()
 
@@ -58,10 +53,11 @@ class ResultScreenViewModel : ViewModel() {
                         coast = 2000f,
                         wifi = true,
                         display = true,
-                        laptop = true,
+                        laptop = false,
                         projector = true,
                         printer = true,
-                        photoUri = Uri.parse("android.resource://com.issart.coworking.android/" + R.drawable.room)
+                        photoUri = Uri.parse("android.resource://com.issart.coworking.android/" + R.drawable.room),
+                        room = false
                     )
                 )
             }

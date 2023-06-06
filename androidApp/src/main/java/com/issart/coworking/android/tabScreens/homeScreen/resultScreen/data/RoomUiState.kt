@@ -13,5 +13,17 @@ data class RoomUiState(
     val laptop:Boolean = false,
     val projector:Boolean = false,
     val printer:Boolean = false,
+    val room:Boolean = false,
     val photoUri: Uri = "".toUri()
-)
+){
+    fun doesMatchFilter(filter:FilterUiState):Boolean{
+        if(filter.multimediaFilter == true){
+            if(wifi||laptop||printer||projector || display == false)
+                return false
+        }
+        if (filter.roomFilter == true)
+            if (!room)
+                return false
+        return true
+    }
+}

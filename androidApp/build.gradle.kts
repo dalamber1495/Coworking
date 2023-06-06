@@ -11,7 +11,7 @@ android {
     compileSdk = 33
     defaultConfig {
         applicationId = "com.issart.coworking.android"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -73,6 +73,10 @@ dependencies {
     implementation ("com.maxkeppeler.sheets-compose-dialogs:core:$dateTimeVersion")
     implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:$dateTimeVersion")
     implementation ("com.maxkeppeler.sheets-compose-dialogs:clock:$dateTimeVersion")
+    implementation ("com.chargemap.compose:numberpicker:1.0.3")
+
+    // YandexMap
+    implementation ("com.yandex.android:maps.mobile:4.3.1-lite")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:2.42")

@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.DetailScreen
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewModel.DetailScreenViewModel
+import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.view.MapScreen
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.homeGraphRoute
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.roomId
@@ -31,6 +32,9 @@ fun HomeGraph(navController: NavHostController) {
 
             SearchScreen(navController)
 
+        }
+        composable(route = HomeScreens.MapScreenRoute.route){
+            MapScreen(navController = navController)
         }
 
         composable(route = HomeScreens.ResultScreenRoute.route) {

@@ -125,6 +125,7 @@ fun ResultScreen(
 
                 }
                 state.value.filters.roomFilter?.let {
+                    if(it)
                     FilterField(text = "Отдельная комната") {
                         onEvent.invoke(
                             ResultScreenEvents.SetFilter(
@@ -138,6 +139,7 @@ fun ResultScreen(
 
                 }
                 state.value.filters.multimediaFilter?.let {
+                    if (it)
                     FilterField(text = "Мультимедиа") {
                         onEvent.invoke(
                             ResultScreenEvents.SetFilter(
