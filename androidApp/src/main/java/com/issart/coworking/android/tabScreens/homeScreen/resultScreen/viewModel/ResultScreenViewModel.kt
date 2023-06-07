@@ -128,7 +128,7 @@ class ResultScreenViewModel(
             }
             ResultScreenEvents.ApplyFilters -> {
                 viewModelScope.launch {
-                    _filter.emit(_filterOnBottomSheet.value)
+                    setFiltersResult.setFilters(_filterOnBottomSheet.value)
                 }
             }
         }

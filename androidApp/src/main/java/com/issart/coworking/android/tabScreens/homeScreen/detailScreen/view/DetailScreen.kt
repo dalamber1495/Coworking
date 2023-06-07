@@ -164,12 +164,14 @@ fun DetailScreen(
         CoworkingTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 25.dp),
             placeHolder = "Дата",
+            readOnly = true,
             valueCallback = {},
             text = state.value.date?.format(DateTimeFormatter.ofPattern("EEE, dd MMM. yyyy")) ?: "",
             leadingIcon = R.drawable.ic_calendar
         )
+        Spacer(modifier = Modifier.height(20.dp))
         CoworkingTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -179,6 +181,7 @@ fun DetailScreen(
                     DateTimeFormatter.ofPattern("HH:mm")
                 )
             }",
+            readOnly = true,
             placeHolder = "Время",
             valueCallback = {},
             leadingIcon = R.drawable.ic_clock
@@ -201,7 +204,7 @@ fun DetailScreen(
                 contentColor = backgroundColor
             )
         ) {
-            Text(text = "НАЙТИ", style = buttonTextStyle)
+            Text(text = "ЗАБРОНИРОВАТЬ", style = buttonTextStyle)
         }
         Spacer(modifier = Modifier.height(100.dp))
 

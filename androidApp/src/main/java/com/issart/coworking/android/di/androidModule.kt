@@ -29,7 +29,7 @@ val androidModule = module {
 
     viewModel { MapViewModel(get())}
     viewModel { ResultScreenViewModel(get(), get()) }
-    viewModel { DetailScreenViewModel() }
+    viewModel { DetailScreenViewModel(get()) }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }
 

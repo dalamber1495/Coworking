@@ -2,18 +2,32 @@ package com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewMode
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.issart.coworking.android.R
+import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.DetailScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.RoomDetailUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.OffsetDateTime
 
-class DetailScreenViewModel : ViewModel() {
+class DetailScreenViewModel (
+    private val setFiltersResult: SetFiltersResult
+        ): ViewModel() {
 
     private val _state = MutableStateFlow(RoomDetailUiState())
     val state = _state.asStateFlow()
 
+
+    init {
+        setFiltersResult.filters.onEach {
+            _state.emit(_state.value.copy(date = it.dateFilter, time = it.timeFilter))
+        }.launchIn(viewModelScope)
+    }
     fun onEvent(event: DetailScreenEvents) {
         when (event) {
             is DetailScreenEvents.GetRoomState -> {
@@ -30,8 +44,8 @@ class DetailScreenViewModel : ViewModel() {
             description = "Описание",
             like = true,
             coast = 2000f,
-            date = OffsetDateTime.now(),
-            time = Pair(OffsetDateTime.now().minusHours(2L), OffsetDateTime.now()),
+            date = LocalDate.now(),
+            time = Pair(LocalTime.now().minusHours(2L), LocalTime.now()),
             wifi = true,
             display = true,
             laptop = true,
