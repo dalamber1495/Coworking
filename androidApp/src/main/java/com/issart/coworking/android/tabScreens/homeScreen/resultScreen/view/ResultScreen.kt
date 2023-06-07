@@ -3,6 +3,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -213,16 +214,17 @@ fun ResultScreen(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 18.dp)
         ) {
-            items(state.value.rooms.size) { id ->
+            items(items = state.value.rooms, key = {room -> room.id} ) { room ->
                 Column(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                 ) {
-                    RoomItem(modifier = Modifier, room = state.value.rooms[id]) {
-                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(id))
+                    RoomItem(modifier = Modifier, room = room, { }) {
+                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(room.id))
                     }
-                    if (id == state.value.rooms.size - 1)
-                        Spacer(modifier = Modifier.height(100.dp))
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
     }

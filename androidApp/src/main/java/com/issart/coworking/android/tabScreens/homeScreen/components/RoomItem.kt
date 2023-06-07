@@ -32,14 +32,18 @@ import com.issart.coworking.android.ui.*
 
 
 @Composable
-fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClick:()->Unit) {
+fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClickLike:()->Unit, onClick:()->Unit) {
 
 
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = backgroundFieldColor, shape = RoundedCornerShape(12.dp))
-            .clickable(interactionSource = remember{ MutableInteractionSource() }, indication = null, onClick = onClick)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
     ) {
         Card(modifier = Modifier.size(maxWidth), shape = RoundedCornerShape(12.dp)) {
             AsyncImage(
@@ -61,7 +65,10 @@ fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClick:()->Unit)
                 Icon(
                     painter =
                     painterResource(id = com.issart.coworking.android.R.drawable.heart),
-                    modifier = Modifier.padding(end = 10.dp, top = 10.dp).size(23.dp),
+                    modifier = Modifier.padding(end = 10.dp, top = 10.dp).size(23.dp)
+                        .clickable(interactionSource = remember {
+                            MutableInteractionSource()
+                        }, indication = null, onClick = onClickLike),
                     contentDescription = null,
                     tint = activeContentColor
                 )

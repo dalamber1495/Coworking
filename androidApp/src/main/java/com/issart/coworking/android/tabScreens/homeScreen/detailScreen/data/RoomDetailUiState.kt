@@ -7,6 +7,7 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 
 data class RoomDetailUiState(
+    val id:Int = -1,
     val name: String = "",
     val title: String = "",
     val description: String = "",

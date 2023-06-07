@@ -16,6 +16,7 @@ import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.view.MapScre
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.homeGraphRoute
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.roomId
+import com.issart.coworking.android.tabScreens.homeScreen.payScreen.view.PayScreen
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.viewModel.ResultScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.view.SearchScreen
 import org.koin.androidx.compose.koinViewModel
@@ -63,6 +64,9 @@ fun HomeGraph(navController: NavHostController) {
                 )
             )
 
+        }
+        composable(HomeScreens.PayScreenRoute.route){
+            PayScreen(navController)
         }
 
     }

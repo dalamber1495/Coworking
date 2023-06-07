@@ -45,7 +45,7 @@ class DetailScreenViewModel (
             like = true,
             coast = 2000f,
             date = LocalDate.now(),
-            time = Pair(LocalTime.now().minusHours(2L), LocalTime.now()),
+            time = Pair(LocalTime.now(), LocalTime.now().plusHours(2)),
             wifi = true,
             display = true,
             laptop = true,

@@ -6,18 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.issart.coworking.android.R
 import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
 import com.issart.coworking.android.domain.repositories.local.geoMapResult.SetGeoMapResult
+import com.issart.coworking.android.domain.repositories.local.getRoomList.GetRoomListUseCase
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.FilterUiState
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultState
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
 class ResultScreenViewModel(
     private val setFiltersResult: SetFiltersResult,
-    private val setGeoMapResult: SetGeoMapResult
+    private val setGeoMapResult: SetGeoMapResult,
+    private val getRoomListUseCase: GetRoomListUseCase
 ) : ViewModel() {
 
     private val _filterOnBottomSheet = MutableStateFlow(
@@ -38,14 +40,14 @@ class ResultScreenViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ResultState())
 
     init {
-        setFiltersResult.filters.onEach {
+            setFiltersResult.filters.onEach {
             _filter.emit(it)
         }.launchIn(viewModelScope)
 
         setGeoMapResult.geoAddress.onEach {
             _filterOnBottomSheet.emit(_filterOnBottomSheet.value.copy(geoAddress = it.Address))
         }.launchIn(viewModelScope)
-        getRooms().onEach {
+        getRoomListUseCase.invoke().onEach {
             _state.emit(_state.value.copy(rooms = it))
         }.launchIn(viewModelScope)
     }
@@ -134,31 +136,6 @@ class ResultScreenViewModel(
         }
     }
 
-    private fun getRooms(): Flow<List<RoomUiState>> {
-        return flow {
-            val mutaList = mutableListOf<RoomUiState>()
 
-            repeat(20) {
-                mutaList.add(
-                    RoomUiState(
-                        name = "Room number 1",
-                        title = "coworking Worki",
-                        like = false,
-                        coast = 2000f,
-                        wifi = true,
-                        display = true,
-                        laptop = false,
-                        projector = true,
-                        printer = true,
-                        photoUri = Uri.parse("android.resource://com.issart.coworking.android/" + R.drawable.room),
-                        room = false
-                    )
-                )
-            }
-            emit(
-                mutaList
-            )
-        }
-    }
 }
 

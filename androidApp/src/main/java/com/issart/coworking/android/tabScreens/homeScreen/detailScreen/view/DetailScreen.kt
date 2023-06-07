@@ -195,7 +195,7 @@ fun DetailScreen(
                 .indication(remember { MutableInteractionSource() }, null),
             onClick = {
                 navController.navigate(
-                    HomeScreens.ResultScreenRoute.route
+                    HomeScreens.PayScreenRoute.route
                 )
             },
             shape = RoundedCornerShape(24.dp),

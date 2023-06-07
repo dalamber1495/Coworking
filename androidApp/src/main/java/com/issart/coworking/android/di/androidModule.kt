@@ -7,6 +7,7 @@ import com.issart.coworking.android.domain.repositories.local.filterResults.SetF
 import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResultImpl
 import com.issart.coworking.android.domain.repositories.local.geoMapResult.SetGeoMapResult
 import com.issart.coworking.android.domain.repositories.local.geoMapResult.SetGeoMapResultImpl
+import com.issart.coworking.android.domain.repositories.local.getRoomList.GetRoomListUseCase
 import com.issart.coworking.android.navigation.AppNavigation
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewModel.DetailScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.viewModel.MapViewModel
@@ -26,9 +27,10 @@ val androidModule = module {
     }
     single <SetGeoMapResult>{ SetGeoMapResultImpl(get()) }
     single <SetFiltersResult>{SetFiltersResultImpl()  }
+    single { GetRoomListUseCase() }
 
     viewModel { MapViewModel(get())}
-    viewModel { ResultScreenViewModel(get(), get()) }
+    viewModel { ResultScreenViewModel(get(), get(), get()) }
     viewModel { DetailScreenViewModel(get()) }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }

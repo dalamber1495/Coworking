@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 
 data class RoomUiState(
+    val id :Int = -1,
     val name:String = "",
     val title:String = "",
     val like:Boolean = false,
