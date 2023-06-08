@@ -1,4 +1,4 @@
-package com.issart.coworking.android.tabScreens.homeScreen.detailScreen
+package com.issart.coworking.android.tabScreens.homeScreen.detailScreen.view
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,8 +26,8 @@ import coil.request.ImageRequest
 import com.issart.coworking.android.R
 import com.issart.coworking.android.authScreen.components.CoworkingTextField
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.DetailScreenEvents
-import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.RoomDetailUiState
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
+import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
 import com.issart.coworking.android.ui.*
 import kotlinx.coroutines.flow.StateFlow
 import java.time.format.DateTimeFormatter
@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DetailScreen(
     navController: NavHostController,
-    stateFlow: StateFlow<RoomDetailUiState>,
+    stateFlow: StateFlow<RoomUiState>,
     onEvent: (DetailScreenEvents) -> Unit,
     id: Int?
 ) {
@@ -85,9 +85,10 @@ fun DetailScreen(
                     )
                 }
                 Icon(
+                    modifier = Modifier.clickable { onEvent.invoke(DetailScreenEvents.SetLikeOnRoom(!state.value.like)) },
                     imageVector = ImageVector.vectorResource(id = if (!state.value.like) R.drawable.heart else R.drawable.heart_fill),
                     contentDescription = null,
-                    tint = activeContentColor
+                    tint =  activeContentColor
                 )
             }
         }

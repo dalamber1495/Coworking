@@ -1,16 +1,14 @@
 package com.issart.coworking.android.tabScreens.homeScreen.resultScreen.viewModel
 
-import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.issart.coworking.android.R
 import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
 import com.issart.coworking.android.domain.repositories.local.geoMapResult.SetGeoMapResult
-import com.issart.coworking.android.domain.repositories.local.getRoomList.GetRoomListUseCase
+import com.issart.coworking.android.domain.repositories.local.useCases.GetRoomListUseCase
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.FilterUiState
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.ResultState
-import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.time.LocalDate
@@ -19,7 +17,7 @@ import java.time.LocalTime
 class ResultScreenViewModel(
     private val setFiltersResult: SetFiltersResult,
     private val setGeoMapResult: SetGeoMapResult,
-    private val getRoomListUseCase: GetRoomListUseCase
+    private val getRoomListUseCase: GetRoomListUseCase,
 ) : ViewModel() {
 
     private val _filterOnBottomSheet = MutableStateFlow(
@@ -40,7 +38,7 @@ class ResultScreenViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ResultState())
 
     init {
-            setFiltersResult.filters.onEach {
+        setFiltersResult.filters.onEach {
             _filter.emit(it)
         }.launchIn(viewModelScope)
 
@@ -49,6 +47,7 @@ class ResultScreenViewModel(
         }.launchIn(viewModelScope)
         getRoomListUseCase.invoke().onEach {
             _state.emit(_state.value.copy(rooms = it))
+            Log.e("TAG", ": $it", )
         }.launchIn(viewModelScope)
     }
 

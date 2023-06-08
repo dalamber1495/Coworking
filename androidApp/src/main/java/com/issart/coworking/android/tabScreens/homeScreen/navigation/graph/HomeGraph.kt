@@ -1,16 +1,13 @@
 package com.issart.coworking.android.tabScreens.homeScreen.navigation.graph
 
 import ResultScreen
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.DetailScreen
+import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.view.DetailScreen
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewModel.DetailScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.view.MapScreen
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens

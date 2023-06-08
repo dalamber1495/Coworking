@@ -48,7 +48,7 @@ fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClickLike:()->U
         Card(modifier = Modifier.size(maxWidth), shape = RoundedCornerShape(12.dp)) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(room.photoUri)
+                    .data(room.photoUri.first())
                     .crossfade(true)
                     .build(),
                 modifier = Modifier
@@ -64,7 +64,7 @@ fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClickLike:()->U
 
                 Icon(
                     painter =
-                    painterResource(id = com.issart.coworking.android.R.drawable.heart),
+                    painterResource(id = if (room.like) com.issart.coworking.android.R.drawable.heart_fill  else com.issart.coworking.android.R.drawable.heart),
                     modifier = Modifier.padding(end = 10.dp, top = 10.dp).size(23.dp)
                         .clickable(interactionSource = remember {
                             MutableInteractionSource()
