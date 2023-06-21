@@ -5,7 +5,8 @@ import java.time.LocalTime
 
 sealed class ResultScreenEvents{
     class SetFilter(val filter:FilterUiState):ResultScreenEvents()
-
+    object UpdateListState : ResultScreenEvents()
+    class SetLikeOnRoom(val id:Int): ResultScreenEvents()
     class SetDatePicker(val text: LocalDate): ResultScreenEvents()
     class SetTimeStartPicker(val text: LocalTime): ResultScreenEvents()
     class SetTimeEndPicker(val text: LocalTime): ResultScreenEvents()

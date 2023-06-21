@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -214,12 +215,12 @@ fun ResultScreen(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 18.dp)
         ) {
-            items(items = state.value.rooms, key = {room -> room.id} ) { room ->
+            items(count = state.value.rooms.size, key = {index -> state.value.rooms[index].id} ) { index ->
                 Column(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                 ) {
-                    RoomItem(modifier = Modifier, room = room, { }) {
-                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(room.id))
+                    RoomItem(modifier = Modifier, room = state.value.rooms[index], {onEvent.invoke(ResultScreenEvents.SetLikeOnRoom(index)) }) {
+                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(state.value.rooms[index].id))
                     }
                 }
             }

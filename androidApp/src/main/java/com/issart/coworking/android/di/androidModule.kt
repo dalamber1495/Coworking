@@ -38,7 +38,7 @@ val androidModule = module {
     single { UpdateRoomUseCase(get()) }
 
     viewModel { MapViewModel(get())}
-    viewModel { ResultScreenViewModel(get(), get(), get()) }
+    viewModel { ResultScreenViewModel(get(), get(), get(), get()) }
     viewModel { DetailScreenViewModel(get(), get(),get(), get()) }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }

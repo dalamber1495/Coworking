@@ -13,13 +13,11 @@ class GetRoomListUseCase(
     private val roomRepository: RoomRepository
 ) {
 
-    private val _roomData = MutableSharedFlow<List<RoomUiState>>()
+    private val _roomData = MutableSharedFlow<List<RoomUiState>>(replay = 1, extraBufferCapacity = 1)
     val roomData = _roomData.asSharedFlow()
-    fun invoke(): Flow<List<RoomUiState>> {
-        return flow {
+
+    suspend fun invoke() {
             val rooms = roomRepository.getRooms()
             _roomData.emit(rooms)
-            emit(rooms)
-        }
     }
 }

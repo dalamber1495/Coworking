@@ -37,7 +37,7 @@ class DetailScreenViewModel(
             is DetailScreenEvents.SetLikeOnRoom -> {
                 viewModelScope.launch {
                     _state.emit(updateRoomUseCase.invoke(_state.value.copy(like = event.like)).single())
-                    getRoomListUseCase.invoke().collect()
+                    getRoomListUseCase.invoke()
                 }
             }
         }
