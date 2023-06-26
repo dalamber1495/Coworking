@@ -1,4 +1,4 @@
-package com.issart.coworking.android.tabScreens.homeScreen.detailScreen.view
+package com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.view
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,28 +23,27 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.issart.coworking.android.R
-import com.issart.coworking.android.authScreen.components.CoworkingTextField
-import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.DetailScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
+import com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.data.ReservedScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
 import com.issart.coworking.android.ui.*
 import kotlinx.coroutines.flow.StateFlow
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun DetailScreen(
+fun ReservedScreen(
     navController: NavHostController,
     stateFlow: StateFlow<RoomUiState>,
-    onEvent: (DetailScreenEvents) -> Unit,
+    onEvent: (ReservedScreenEvents) -> Unit,
     id: Int?
 ) {
+
 
     val state = stateFlow.collectAsState()
 
     LaunchedEffect(key1 = id) {
         id?.let {
-            onEvent.invoke(DetailScreenEvents.GetRoomState(id))
+            onEvent.invoke(ReservedScreenEvents.GetRoomState(id))
         }
     }
 
@@ -64,7 +63,7 @@ fun DetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(modifier = Modifier.clickable {
@@ -84,14 +83,9 @@ fun DetailScreen(
                         color = fontDescriptionColor
                     )
                 }
-                Icon(
-                    modifier = Modifier.clickable { onEvent.invoke(DetailScreenEvents.SetLikeOnRoom(!state.value.like)) },
-                    imageVector = ImageVector.vectorResource(id = if (!state.value.like) R.drawable.heart else R.drawable.heart_fill),
-                    contentDescription = null,
-                    tint =  activeContentColor
-                )
             }
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,78 +110,93 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.width(9.dp))
             }
         }
+
+        Spacer(Modifier.height(40.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp, start = 25.dp, end = 25.dp),
+                .padding(start = 25.dp, end = 25.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = state.value.name, style = nameItemTextStyle, fontSize = 24.sp)
             Text(
-                text = "${state.value.coast.toInt()} ₽",
-                style = coastItemTextStyle,
-                fontSize = 18.sp
+                text = "${state.value.name} успешно\nзабронирована",
+                style = nameItemTextStyle,
+                fontSize = 24.sp
             )
+
         }
-        Spacer(modifier = Modifier.height(1.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            text = state.value.title,
-            style = titleItemTextStyle
-        )
-        Spacer(modifier = Modifier.height(9.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            text = state.value.description,
-            style = nameItemTextStyle,
-            fontSize = 16.sp
-        )
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(Modifier.height(33.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 25.dp)
         ) {
-            IconItem(resId = R.drawable.wifi, text = "Wi-Fi")
-            IconItem(resId = R.drawable.monitor, text = "Экран")
-            IconItem(resId = R.drawable.laptop, text = "Ноутбук")
-            IconItem(resId = R.drawable.video, text = "Проектор")
-            IconItem(resId = R.drawable.printer, text = "Принтер")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        CoworkingTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            placeHolder = "Дата",
-            readOnly = true,
-            valueCallback = {},
-            text = state.value.date?.format(DateTimeFormatter.ofPattern("EEE, dd MMM. yyyy")) ?: "",
-            leadingIcon = R.drawable.ic_calendar
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        CoworkingTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            text = "${state.value.time?.first?.format(DateTimeFormatter.ofPattern("HH:mm"))}-${
-                state.value.time?.second?.format(
-                    DateTimeFormatter.ofPattern("HH:mm")
+
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_calendar),
+                    contentDescription = null,
+                    tint = fontDescriptionColor
                 )
-            }",
-            readOnly = true,
-            placeHolder = "Время",
-            valueCallback = {},
-            leadingIcon = R.drawable.ic_clock
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.width(13.dp))
+                Column {
+                    Text(
+                        text = state.value.date?.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+                            ?: "",
+                        style = nameItemTextStyle
+                    )
+                    Text(
+                        text = "c ${state.value.time?.first?.format(DateTimeFormatter.ofPattern("HH:mm"))} до ${
+                            state.value.time?.second?.format(
+                                DateTimeFormatter.ofPattern("HH:mm")
+                            )
+                        }",
+                        style = nameItemTextStyle
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_pin),
+                    contentDescription = null,
+                    tint = fontDescriptionColor
+                )
+                Spacer(modifier = Modifier.width(13.dp))
+                Column {
+                    Text(
+                        text = state.value.name,
+                        style = nameItemTextStyle
+                    )
+                    Text(
+                        text = state.value.address,
+                        style = nameItemTextStyle
+                    )
+                }
+            }
+
+        }
+
+    }
+
+    Column(
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -196,39 +205,20 @@ fun DetailScreen(
                 .indication(remember { MutableInteractionSource() }, null),
             onClick = {
                 navController.navigate(
-                    HomeScreens.PayScreenRoute.createRoute(id!!)
+                    HomeScreens.PayScreenRoute.route
                 )
             },
             shape = RoundedCornerShape(24.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = activeContentColor,
-                contentColor = backgroundColor
-            )
+                backgroundColor = backgroundColor,
+                contentColor = activeContentColor,
+            ),
+            border = BorderStroke(1.dp, activeContentColor)
         ) {
-            Text(text = "ЗАБРОНИРОВАТЬ", style = buttonTextStyle)
+            Text(text = "ОТМЕНИТЬ БРОНИРОВАНИЕ", style = buttonTextStyle, color = activeContentColor)
         }
         Spacer(modifier = Modifier.height(100.dp))
 
-
-    }
-}
-
-
-@Composable
-fun IconItem(resId: Int, text: String) {
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            modifier = Modifier.size(20.dp),
-            imageVector = ImageVector.vectorResource(id = resId),
-            contentDescription = null,
-            tint = inactiveContentColor
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = text, style = titleItemTextStyle)
     }
 
 }

@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.issart.coworking.android.R
+import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.payScreen.components.ClickableTextField
 import com.issart.coworking.android.ui.*
 
 @Composable
-fun PayScreen(navController: NavHostController) {
+fun PayScreen(navController: NavHostController, id:Int?) {
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -97,7 +98,7 @@ fun PayScreen(navController: NavHostController) {
                     .height(50.dp)
                     .indication(remember { MutableInteractionSource() }, null),
                 onClick = {
-
+                    navController.navigate(HomeScreens.ReservedScreenRoute.createRoute(id!!),HomeScreens.ReservedScreenRoute.options)
                 },
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(

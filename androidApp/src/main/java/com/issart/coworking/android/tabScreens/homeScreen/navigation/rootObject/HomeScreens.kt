@@ -8,6 +8,7 @@ const val resultScreenRoute = "resultScreenRoute"
 const val detailScreenRoute = "detailScreenRoute"
 const val payScreenRoute = "payScreenRoute"
 const val mapScreenRoute = "mapScreenRoute"
+const val reservedScreenRoute = "reservedScreenRoute"
 const val roomId = "roomId"
 
 sealed class HomeScreens(
@@ -33,5 +34,15 @@ sealed class HomeScreens(
         }
     }
 
-    object PayScreenRoute : HomeScreens(route = payScreenRoute)
+    object ReservedScreenRoute : HomeScreens(route = "$reservedScreenRoute?$roomId={$roomId}", options = NavOptions.Builder().setPopUpTo(route = searchScreenRoute, inclusive = false).build()) {
+        fun createRoute(id: Int) : String {
+            return "$reservedScreenRoute?$roomId=$id"
+        }
+    }
+
+    object PayScreenRoute : HomeScreens(route = "$payScreenRoute?$roomId={$roomId}") {
+        fun createRoute(id: Int) : String {
+            return "$payScreenRoute?$roomId=$id"
+        }
+    }
 }

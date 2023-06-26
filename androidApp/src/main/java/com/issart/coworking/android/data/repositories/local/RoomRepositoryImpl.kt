@@ -45,7 +45,8 @@ class RoomRepositoryImpl : RoomRepository {
                     room = false,
                     description = "Описание",
                     date = null,
-                    time = null
+                    time = null,
+                    address = "Коворкинг Worki ул. Ленина, 20"
                 )
             )
         }

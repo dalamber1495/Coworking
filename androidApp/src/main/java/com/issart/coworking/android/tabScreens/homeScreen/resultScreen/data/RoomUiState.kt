@@ -20,7 +20,8 @@ data class RoomUiState(
     val projector: Boolean = false,
     val printer: Boolean = false,
     val room: Boolean = false,
-    val photoUri: List<Uri> = emptyList()
+    val photoUri: List<Uri> = emptyList(),
+    val address: String = ""
 ){
     fun doesMatchFilter(filter:FilterUiState):Boolean{
         if(filter.multimediaFilter == true){

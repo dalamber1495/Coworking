@@ -15,6 +15,7 @@ import com.issart.coworking.android.domain.repositories.local.useCases.UpdateRoo
 import com.issart.coworking.android.navigation.AppNavigation
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewModel.DetailScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.viewModel.MapViewModel
+import com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.viewModel.ReservedScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.viewModel.ResultScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.viewModel.SearchScreenViewModel
 import org.koin.android.ext.koin.androidContext
@@ -42,5 +43,6 @@ val androidModule = module {
     viewModel { DetailScreenViewModel(get(), get(),get(), get()) }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }
+    viewModel { ReservedScreenViewModel(get(), get())}
 
 }
