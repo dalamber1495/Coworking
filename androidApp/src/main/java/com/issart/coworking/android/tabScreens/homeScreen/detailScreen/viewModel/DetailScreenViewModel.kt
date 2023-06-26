@@ -31,7 +31,7 @@ class DetailScreenViewModel(
         when (event) {
             is DetailScreenEvents.GetRoomState -> {
                 getRoomByIdUseCase.invoke(event.id).onEach {
-                    _state.emit(it)
+                    _state.emit(it.copy(date = _state.value.date, time = _state.value.time))
                 }.launchIn(viewModelScope)
             }
             is DetailScreenEvents.SetLikeOnRoom -> {
