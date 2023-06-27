@@ -34,7 +34,7 @@ sealed class HomeScreens(
         }
     }
 
-    object ReservedScreenRoute : HomeScreens(route = "$reservedScreenRoute?$roomId={$roomId}", options = NavOptions.Builder().setPopUpTo(route = searchScreenRoute, inclusive = false).build()) {
+    object ReservedScreenRoute : HomeScreens(route = "$reservedScreenRoute?$roomId={$roomId}") {
         fun createRoute(id: Int) : String {
             return "$reservedScreenRoute?$roomId=$id"
         }

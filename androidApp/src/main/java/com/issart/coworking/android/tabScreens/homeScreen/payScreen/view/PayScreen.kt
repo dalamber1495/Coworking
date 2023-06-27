@@ -98,7 +98,7 @@ fun PayScreen(navController: NavHostController, id:Int?) {
                     .height(50.dp)
                     .indication(remember { MutableInteractionSource() }, null),
                 onClick = {
-                    navController.navigate(HomeScreens.ReservedScreenRoute.createRoute(id!!),HomeScreens.ReservedScreenRoute.options)
+                    navController.navigate(HomeScreens.ReservedScreenRoute.createRoute(id!!))
                 },
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(

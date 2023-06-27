@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,7 +38,8 @@ fun DetailScreen(
     navController: NavHostController,
     stateFlow: StateFlow<RoomUiState>,
     onEvent: (DetailScreenEvents) -> Unit,
-    id: Int?
+    id: Int?,
+    snackbarHostState:SnackbarHostState
 ) {
 
     val state = stateFlow.collectAsState()
@@ -210,6 +212,34 @@ fun DetailScreen(
         Spacer(modifier = Modifier.height(100.dp))
 
 
+    }
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .fillMaxHeight(0.09f)
+                .padding(top = 8.dp, start = 10.dp, end = 10.dp)
+        ) { data ->
+            Snackbar(
+                backgroundColor = coworkingGray,
+                contentColor = fontDescriptionColor,
+                shape = RoundedCornerShape(12.dp),
+                action = {
+                    IconButton(onClick = { data.performAction() }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null,
+                            tint = fontDescriptionColor
+                        )
+                    }
+                }
+            ) {
+                Text(text = data.message, style = nameItemTextStyle)
+            }
+        }
     }
 }
 

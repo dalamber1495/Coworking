@@ -1,5 +1,6 @@
 package com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -7,10 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,7 +38,14 @@ fun ReservedScreen(
 
 
     val state = stateFlow.collectAsState()
+    val showDialog = remember {
+        mutableStateOf(false)
+    }
+    BackHandler(enabled = true) {
 
+        navController.popBackStack(HomeScreens.SearchScreenRoute.route,false)
+
+    }
     LaunchedEffect(key1 = id) {
         id?.let {
             onEvent.invoke(ReservedScreenEvents.GetRoomState(id))
@@ -67,7 +72,7 @@ fun ReservedScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(modifier = Modifier.clickable {
-                    navController.popBackStack()
+                    navController.popBackStack(HomeScreens.SearchScreenRoute.route,inclusive = false)
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -178,11 +183,13 @@ fun ReservedScreen(
                 Column {
                     Text(
                         text = state.value.name,
-                        style = nameItemTextStyle
+                        style = nameItemTextStyle,
+                        fontSize = 16.sp
                     )
                     Text(
                         text = state.value.address,
-                        style = nameItemTextStyle
+                        style = nameItemTextStyle,
+                        fontSize = 16.sp
                     )
                 }
             }
@@ -197,6 +204,7 @@ fun ReservedScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -204,9 +212,7 @@ fun ReservedScreen(
                 .height(50.dp)
                 .indication(remember { MutableInteractionSource() }, null),
             onClick = {
-                navController.navigate(
-                    HomeScreens.PayScreenRoute.route
-                )
+                showDialog.value = true
             },
             shape = RoundedCornerShape(24.dp),
             colors = ButtonDefaults.buttonColors(
@@ -215,10 +221,27 @@ fun ReservedScreen(
             ),
             border = BorderStroke(1.dp, activeContentColor)
         ) {
-            Text(text = "ОТМЕНИТЬ БРОНИРОВАНИЕ", style = buttonTextStyle, color = activeContentColor)
+            Text(
+                text = "ОТМЕНИТЬ БРОНИРОВАНИЕ",
+                style = buttonTextStyle,
+                color = activeContentColor
+            )
         }
         Spacer(modifier = Modifier.height(100.dp))
 
+    }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+
+
+        if (showDialog.value)
+            ReservedScreenDialog(cancelReservedCallback = {
+                navController.getBackStackEntry(HomeScreens.DetailScreenRoute.route).savedStateHandle["cancelReserve"] =
+                    true
+                navController.popBackStack(HomeScreens.DetailScreenRoute.route,false, saveState = true)
+            }) {
+                showDialog.value = false
+            }
     }
 
 }

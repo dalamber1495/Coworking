@@ -1,7 +1,12 @@
 package com.issart.coworking.android.tabScreens.homeScreen.navigation.graph
 
 import ResultScreen
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -58,14 +63,33 @@ fun HomeGraph(navController: NavHostController) {
             )
         ) {
 
+            val snackbarHostState = remember { SnackbarHostState() }
             val viewModel = koinViewModel<DetailScreenViewModel>()
+            val snackbarShow : Boolean? = it.savedStateHandle["cancelReserve"]
+            LaunchedEffect(key1 = snackbarShow){
+                if(snackbarShow == true) {
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Вы отменили бронирование",
+                        duration = SnackbarDuration.Short
+                    )
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            it.savedStateHandle["cancelReserve"] = null
+                        }
+                        SnackbarResult.Dismissed -> {
+                            it.savedStateHandle["cancelReserve"] = null
+                        }
+                    }
+                }
+            }
             DetailScreen(
                 navController = navController,
                 stateFlow = viewModel.state,
                 onEvent = viewModel::onEvent,
-                it.arguments?.getInt(
+                id = it.arguments?.getInt(
                     roomId
-                )
+                ),
+                snackbarHostState = snackbarHostState
             )
 
         }
