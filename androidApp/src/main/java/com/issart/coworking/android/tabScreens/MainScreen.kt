@@ -58,10 +58,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         MainScreenTabRoute.HomeTab,
-        MainScreenTabRoute.LikeTab,
         MainScreenTabRoute.ProfileTab,
-        MainScreenTabRoute.OrderTab,
-
         )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -77,27 +74,10 @@ fun BottomBar(navController: NavHostController) {
             easing = LinearEasing
         )
     )
-    val animateLike = animateDpAsState(
-        targetValue = if (currentDestination?.hierarchy?.any {
-                it.route == MainScreenTabRoute.LikeTab.route
-            } == true) 40.dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 300,
-            easing = LinearEasing
-        )
-    )
+
     val animateProfile = animateDpAsState(
         targetValue = if (currentDestination?.hierarchy?.any {
                 it.route == MainScreenTabRoute.ProfileTab.route
-            } == true) 40.dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 300,
-            easing = LinearEasing
-        )
-    )
-    val animateOrder = animateDpAsState(
-        targetValue = if (currentDestination?.hierarchy?.any {
-                it.route == MainScreenTabRoute.OrderTab.route
             } == true) 40.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 300,
@@ -113,13 +93,11 @@ fun BottomBar(navController: NavHostController) {
                 .height(100.dp),
             contentAlignment = Alignment.BottomStart
         ) {
-            val sizeItem = maxWidth / 4
+            val sizeItem = maxWidth / 2
 
             Row(verticalAlignment = Alignment.Bottom) {
                 SelectedOval(width = sizeItem, animateHeight = animateHome.value)
-                SelectedOval(width = sizeItem, animateHeight = animateLike.value)
                 SelectedOval(width = sizeItem, animateHeight = animateProfile.value)
-                SelectedOval(width = sizeItem, animateHeight = animateOrder.value)
             }
                 BottomNavigation(
                     modifier = Modifier, backgroundColor = Color.Transparent, elevation = 0.dp
