@@ -44,7 +44,7 @@ fun ResultScreen(
     navController: NavHostController,
     stateFlow: StateFlow<ResultState>,
     onEvent: (ResultScreenEvents) -> Unit,
-    filterBottomSheetState:StateFlow<FilterUiState>
+    filterBottomSheetState: StateFlow<FilterUiState>
 ) {
 
 
@@ -73,7 +73,7 @@ fun ResultScreen(
     val scaffoldFilterState = rememberBottomSheetScaffoldState(bottomSheetState = sheetFilterState)
     BottomSheetScaffold(
         sheetContent = {
-            BottomFilterSheet(filterSheetState, onEvent, navController){
+            BottomFilterSheet(filterSheetState, onEvent, navController) {
                 scope.launch {
                     sheetFilterState.collapse()
                 }
@@ -87,148 +87,153 @@ fun ResultScreen(
         sheetElevation = 0.dp,
     ) {
         Column {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 25.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 25.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.clickable {
-                    navController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null,
-                        tint = fontDescriptionColor
-                    )
-                    Spacer(Modifier.width(2.dp))
-                    Text(
-                        text = "Назад к поиску",
-                        fontSize = 16.sp,
-                        fontFamily = sourcesanspro,
-                        fontWeight = FontWeight.W400,
-                        color = fontDescriptionColor
-                    )
-                }
-                Icon(
-                    modifier = Modifier.clickable(interactionSource = remember {
-                        MutableInteractionSource()
-                    }, indication = null, onClick = {
-                        scope.launch {
-                            if (sheetFilterState.isCollapsed)
-                                sheetFilterState.expand()
-                            else
-                                sheetFilterState.collapse()
-                        }
-                    }),
-                    imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_filter),
-                    contentDescription = null,
-                    tint = inactiveContentColor
-                )
-            }
-
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                state.value.filters.dateFilter?.let {
-                    FilterField(text = it.format(DateTimeFormatter.ofPattern("EEE, dd MMM. yyyy"))) {
-                        onEvent.invoke(
-                            ResultScreenEvents.SetFilter(
-                                state.value.filters.copy(
-                                    dateFilter = null
-                                )
-                            )
-                        )
-                    }
-//                Spacer(modifier = Modifier.width(12.dp))
-                }
-                state.value.filters.timeFilter?.let {
-                    FilterField(
-                        text = "${it.first.format(DateTimeFormatter.ofPattern("HH:mm"))}-${
-                            it.second.format(
-                                DateTimeFormatter.ofPattern("HH:mm")
-                            )
-                        }"
-                    ) {
-                        onEvent.invoke(
-                            ResultScreenEvents.SetFilter(
-                                state.value.filters.copy(
-                                    timeFilter = null
-                                )
-                            )
-                        )
-                    }
-//                Spacer(modifier = Modifier.width(12.dp))
-
-                }
-                state.value.filters.peopleFilter?.let {
-                    FilterField(text = "$it ч.") {
-                        onEvent.invoke(
-                            ResultScreenEvents.SetFilter(
-                                state.value.filters.copy(
-                                    peopleFilter = null
-                                )
-                            )
-                        )
-                    }
-//                Spacer(modifier = Modifier.width(12.dp))
-
-                }
-                state.value.filters.roomFilter?.let {
-                    if (it)
-                        FilterField(text = "Отдельная комната") {
-                            onEvent.invoke(
-                                ResultScreenEvents.SetFilter(
-                                    state.value.filters.copy(
-                                        roomFilter = null
-                                    )
-                                )
-                            )
-                        }
-//                Spacer(modifier = Modifier.width(12.dp))
-
-                }
-                state.value.filters.multimediaFilter?.let {
-                    if (it)
-                        FilterField(text = "Мультимедиа") {
-                            onEvent.invoke(
-                                ResultScreenEvents.SetFilter(
-                                    state.value.filters.copy(
-                                        multimediaFilter = null
-                                    )
-                                )
-                            )
-                        }
-                }
-            }
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 18.dp)
-        ) {
-            items(count = state.value.rooms.size, key = {index -> state.value.rooms[index].id} ) { index ->
-                Column(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RoomItem(modifier = Modifier, room = state.value.rooms[index], {onEvent.invoke(ResultScreenEvents.SetLikeOnRoom(index)) }) {
-                        navController.navigate(HomeScreens.DetailScreenRoute.createRoute(state.value.rooms[index].id))
+                    Row(modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = null,
+                            tint = fontDescriptionColor
+                        )
+                        Spacer(Modifier.width(2.dp))
+                        Text(
+                            text = "Назад к поиску",
+                            fontSize = 16.sp,
+                            fontFamily = sourcesanspro,
+                            fontWeight = FontWeight.W400,
+                            color = fontDescriptionColor
+                        )
+                    }
+                    Icon(
+                        modifier = Modifier.clickable(interactionSource = remember {
+                            MutableInteractionSource()
+                        }, indication = null, onClick = {
+                            scope.launch {
+                                if (sheetFilterState.isCollapsed)
+                                    sheetFilterState.expand()
+                                else
+                                    sheetFilterState.collapse()
+                            }
+                        }),
+                        imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_filter),
+                        contentDescription = null,
+                        tint = inactiveContentColor
+                    )
+                }
+
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    state.value.filters.dateFilter?.let {
+                        FilterField(text = it.format(DateTimeFormatter.ofPattern("EEE, dd MMM. yyyy"))) {
+                            onEvent.invoke(
+                                ResultScreenEvents.SetFilter(
+                                    state.value.filters.copy(
+                                        dateFilter = null
+                                    )
+                                )
+                            )
+                        }
+//                Spacer(modifier = Modifier.width(12.dp))
+                    }
+                    state.value.filters.timeFilter?.let {
+                        FilterField(
+                            text = "${it.first.format(DateTimeFormatter.ofPattern("HH:mm"))}-${
+                                it.second.format(
+                                    DateTimeFormatter.ofPattern("HH:mm")
+                                )
+                            }"
+                        ) {
+                            onEvent.invoke(
+                                ResultScreenEvents.SetFilter(
+                                    state.value.filters.copy(
+                                        timeFilter = null
+                                    )
+                                )
+                            )
+                        }
+//                Spacer(modifier = Modifier.width(12.dp))
+
+                    }
+                    state.value.filters.peopleFilter?.let {
+                        FilterField(text = "$it ч.") {
+                            onEvent.invoke(
+                                ResultScreenEvents.SetFilter(
+                                    state.value.filters.copy(
+                                        peopleFilter = null
+                                    )
+                                )
+                            )
+                        }
+//                Spacer(modifier = Modifier.width(12.dp))
+
+                    }
+                    state.value.filters.roomFilter?.let {
+                        if (it)
+                            FilterField(text = "Отдельная комната") {
+                                onEvent.invoke(
+                                    ResultScreenEvents.SetFilter(
+                                        state.value.filters.copy(
+                                            roomFilter = null
+                                        )
+                                    )
+                                )
+                            }
+//                Spacer(modifier = Modifier.width(12.dp))
+
+                    }
+                    state.value.filters.multimediaFilter?.let {
+                        if (it)
+                            FilterField(text = "Мультимедиа") {
+                                onEvent.invoke(
+                                    ResultScreenEvents.SetFilter(
+                                        state.value.filters.copy(
+                                            multimediaFilter = null
+                                        )
+                                    )
+                                )
+                            }
                     }
                 }
             }
-            item {
-                Spacer(modifier = Modifier.height(100.dp))
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 18.dp)
+            ) {
+                items(
+                    count = state.value.rooms.size,
+                    key = { index -> state.value.rooms[index].id }) { index ->
+                    Column(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    ) {
+                        RoomItem(
+                            modifier = Modifier,
+                            room = state.value.rooms[index],
+                            { onEvent.invoke(ResultScreenEvents.SetLikeOnRoom(index)) }) {
+                            navController.navigate(HomeScreens.DetailScreenRoute.createRoute(state.value.rooms[index].id))
+                        }
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
             }
         }
-    }
     }
 
 }

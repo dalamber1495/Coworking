@@ -4,11 +4,15 @@ import android.net.Uri
 import com.issart.coworking.android.R
 import com.issart.coworking.android.domain.repositories.local.getRoomList.RoomRepository
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
+import java.time.LocalDate
+import java.time.LocalTime
 
 
 class RoomRepositoryImpl : RoomRepository {
 
     private val roomList = getDataRooms()
+    private val historyList = mutableListOf<RoomUiState>()
+    private val reservedList = mutableListOf<RoomUiState>()
 
 
     override suspend fun getRooms(): List<RoomUiState> {
@@ -57,4 +61,32 @@ class RoomRepositoryImpl : RoomRepository {
         roomList[room.id] = room
         return room
     }
+
+    override suspend fun addRoomInHistory(
+        id: Int,
+        date: LocalDate,
+        time: Pair<LocalTime, LocalTime>
+    ) :List<RoomUiState>{
+        val room = roomList[id]
+        room?.let {
+            historyList.add(it)
+            if (historyList.size > 10)
+                historyList.removeFirst()
+        }
+        return historyList
+    }
+
+    override suspend fun addRoomInReserved(
+        id: Int,
+        date: LocalDate,
+        time: Pair<LocalTime, LocalTime>
+    ): List<RoomUiState> {
+        val room = roomList[id]
+        room?.let {
+            reservedList.add(it)
+        }
+        return reservedList
+    }
+
+
 }
