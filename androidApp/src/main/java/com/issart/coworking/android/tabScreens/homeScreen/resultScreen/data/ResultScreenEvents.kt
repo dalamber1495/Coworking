@@ -15,5 +15,6 @@ sealed class ResultScreenEvents{
     object SetRoom: ResultScreenEvents()
     object SetMultimedia: ResultScreenEvents()
     object ApplyFilters:ResultScreenEvents()
+    class AddRoomInHistory(val id: Int, val date: LocalDate?, val time: Pair<LocalTime, LocalTime>?):ResultScreenEvents()
 
 }

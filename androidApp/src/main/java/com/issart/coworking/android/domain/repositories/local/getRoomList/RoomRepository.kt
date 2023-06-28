@@ -13,4 +13,6 @@ interface RoomRepository {
 
     suspend fun addRoomInReserved(id:Int, date:LocalDate, time: Pair<LocalTime, LocalTime>):List<RoomUiState>
 
+    suspend fun removeRoomFromReserved(id:Int):List<RoomUiState>
+
 }

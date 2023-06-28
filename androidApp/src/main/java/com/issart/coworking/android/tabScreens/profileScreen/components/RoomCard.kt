@@ -55,7 +55,7 @@ fun RoomCard(
                         modifier = Modifier.size(24.dp),
                         imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_calendar),
                         contentDescription = null,
-                        tint = fontDescriptionColor
+                        tint = inactiveContentColor
                     )
                     Spacer(modifier = Modifier.width(13.dp))
                     Column {
@@ -89,7 +89,7 @@ fun RoomCard(
                         modifier = Modifier.size(24.dp),
                         imageVector = ImageVector.vectorResource(id = com.issart.coworking.android.R.drawable.ic_pin),
                         contentDescription = null,
-                        tint = fontDescriptionColor
+                        tint = inactiveContentColor
                     )
                     Spacer(modifier = Modifier.width(13.dp))
                     Column {

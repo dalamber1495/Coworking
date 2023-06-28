@@ -13,6 +13,7 @@ import com.issart.coworking.android.domain.repositories.local.useCases.*
 import com.issart.coworking.android.navigation.AppNavigation
 import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.viewModel.DetailScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.mapScreen.viewModel.MapViewModel
+import com.issart.coworking.android.tabScreens.homeScreen.payScreen.viewModel.PayScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.viewModel.ReservedScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.viewModel.ResultScreenViewModel
 import com.issart.coworking.android.tabScreens.homeScreen.searchScreen.viewModel.SearchScreenViewModel
@@ -29,22 +30,23 @@ val androidModule = module {
     single {
         Geocoder(androidContext(), Locale.getDefault())
     }
-    single <SetGeoMapResult>{ SetGeoMapResultImpl(get()) }
-    single <SetFiltersResult>{SetFiltersResultImpl()  }
+    single<SetGeoMapResult> { SetGeoMapResultImpl(get()) }
+    single<SetFiltersResult> { SetFiltersResultImpl() }
     single { GetRoomListUseCase(get()) }
-    single <RoomRepository>{ RoomRepositoryImpl() }
+    single<RoomRepository> { RoomRepositoryImpl() }
     single { GetRoomByIdUseCase(get()) }
     single { GetRoomListUseCase(get()) }
     single { UpdateRoomUseCase(get()) }
     single { AddRoomInHistoryUseCase(get()) }
     single { AddRoomInReservedUseCase(get()) }
 
-    viewModel { MapViewModel(get())}
-    viewModel { ResultScreenViewModel(get(), get(), get(), get()) }
-    viewModel { DetailScreenViewModel(get(), get(),get(), get()) }
+    viewModel { MapViewModel(get()) }
+    viewModel { ResultScreenViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailScreenViewModel(get(), get(), get(), get()) }
     viewModel { AuthScreenViewModel() }
     viewModel { SearchScreenViewModel(get(), get()) }
-    viewModel { ReservedScreenViewModel(get(), get())}
-    viewModel { ProfileScreenViewModel(get(), get())}
+    viewModel { ReservedScreenViewModel(get(), get(), get()) }
+    viewModel { ProfileScreenViewModel(get(), get()) }
+    viewModel { PayScreenViewModel(get(), get()) }
 
 }

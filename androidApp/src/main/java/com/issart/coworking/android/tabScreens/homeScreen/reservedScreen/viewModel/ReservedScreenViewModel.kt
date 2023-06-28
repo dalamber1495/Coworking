@@ -3,8 +3,8 @@ package com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.viewMo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
+import com.issart.coworking.android.domain.repositories.local.useCases.AddRoomInReservedUseCase
 import com.issart.coworking.android.domain.repositories.local.useCases.GetRoomByIdUseCase
-import com.issart.coworking.android.tabScreens.homeScreen.detailScreen.data.DetailScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.reservedScreen.data.ReservedScreenEvents
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.RoomUiState
 import kotlinx.coroutines.flow.*
@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 class ReservedScreenViewModel(
     private val getRoomByIdUseCase: GetRoomByIdUseCase,
     private val setFiltersResult: SetFiltersResult,
-    ) : ViewModel() {
+    private val addRoomInReservedUseCase: AddRoomInReservedUseCase
+) : ViewModel() {
 
 
     private val _state = MutableStateFlow(RoomUiState())
@@ -31,6 +32,11 @@ class ReservedScreenViewModel(
                 getRoomByIdUseCase.invoke(event.id).onEach {
                     _state.emit(it.copy(date = _state.value.date, time = _state.value.time))
                 }.launchIn(viewModelScope)
+            }
+            is ReservedScreenEvents.RemoveRoomFromReserved -> {
+                viewModelScope.launch {
+                    addRoomInReservedUseCase.remove(event.id)
+                }
             }
         }
     }

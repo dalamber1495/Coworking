@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.issart.coworking.android.domain.repositories.local.filterResults.SetFiltersResult
 import com.issart.coworking.android.domain.repositories.local.geoMapResult.SetGeoMapResult
+import com.issart.coworking.android.domain.repositories.local.useCases.AddRoomInHistoryUseCase
 import com.issart.coworking.android.domain.repositories.local.useCases.GetRoomListUseCase
 import com.issart.coworking.android.domain.repositories.local.useCases.UpdateRoomUseCase
 import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.FilterUiState
@@ -21,7 +22,8 @@ class ResultScreenViewModel(
     private val setFiltersResult: SetFiltersResult,
     private val setGeoMapResult: SetGeoMapResult,
     private val getRoomListUseCase: GetRoomListUseCase,
-    private val updateRoomUseCase: UpdateRoomUseCase
+    private val updateRoomUseCase: UpdateRoomUseCase,
+    private val addRoomInHistoryUseCase: AddRoomInHistoryUseCase
 ) : ViewModel() {
 
     private val _filterOnBottomSheet = MutableStateFlow(
@@ -40,7 +42,7 @@ class ResultScreenViewModel(
     private var _stateList = mutableStateListOf<RoomUiState>()
     private val _listRooms = MutableStateFlow(_stateList)
     private val _state = MutableStateFlow(ResultState())
-    val state = combine(_state, _listRooms, _filter) {state, listRooms, filter ->
+    val state = combine(_state, _listRooms, _filter) { state, listRooms, filter ->
         state.copy(rooms = listRooms.filter { it.doesMatchFilter(filter) }, filters = filter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ResultState())
 
@@ -149,10 +151,17 @@ class ResultScreenViewModel(
             }
             is ResultScreenEvents.SetLikeOnRoom -> {
                 viewModelScope.launch {
-                    _stateList[event.id] = _stateList[event.id].copy(like = !_stateList[event.id].like)
+                    _stateList[event.id] =
+                        _stateList[event.id].copy(like = !_stateList[event.id].like)
                     _state.value = _state.value.copy(rooms = _stateList.toList())
 
                     updateRoomUseCase.invoke(_listRooms.value[event.id]).single()
+                }
+            }
+            is ResultScreenEvents.AddRoomInHistory -> {
+                viewModelScope.launch {
+                    if (_filter.value.dateFilter != null && _filter.value.timeFilter != null)
+                        addRoomInHistoryUseCase.invoke(event.id, _filter.value.dateFilter!!, _filter.value.timeFilter!!)
                 }
             }
         }

@@ -43,7 +43,7 @@ fun ReservedScreen(
     }
     BackHandler(enabled = true) {
 
-        navController.popBackStack(HomeScreens.SearchScreenRoute.route,false)
+        navController.popBackStack(HomeScreens.SearchScreenRoute.route, false)
 
     }
     LaunchedEffect(key1 = id) {
@@ -72,7 +72,10 @@ fun ReservedScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(modifier = Modifier.clickable {
-                    navController.popBackStack(HomeScreens.SearchScreenRoute.route,inclusive = false)
+                    navController.popBackStack(
+                        HomeScreens.SearchScreenRoute.route,
+                        inclusive = false
+                    )
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -238,7 +241,12 @@ fun ReservedScreen(
             ReservedScreenDialog(cancelReservedCallback = {
                 navController.getBackStackEntry(HomeScreens.DetailScreenRoute.route).savedStateHandle["cancelReserve"] =
                     true
-                navController.popBackStack(HomeScreens.DetailScreenRoute.route,false, saveState = true)
+                onEvent.invoke(ReservedScreenEvents.RemoveRoomFromReserved(id!!))
+                navController.popBackStack(
+                    HomeScreens.DetailScreenRoute.route,
+                    false,
+                    saveState = true
+                )
             }) {
                 showDialog.value = false
             }

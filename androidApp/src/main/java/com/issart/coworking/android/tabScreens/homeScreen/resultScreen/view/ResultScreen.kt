@@ -225,6 +225,13 @@ fun ResultScreen(
                             modifier = Modifier,
                             room = state.value.rooms[index],
                             { onEvent.invoke(ResultScreenEvents.SetLikeOnRoom(index)) }) {
+                            onEvent.invoke(
+                                ResultScreenEvents.AddRoomInHistory(
+                                    state.value.rooms[index].id,
+                                    state.value.rooms[index].date,
+                                    state.value.rooms[index].time
+                                )
+                            )
                             navController.navigate(HomeScreens.DetailScreenRoute.createRoute(state.value.rooms[index].id))
                         }
                     }

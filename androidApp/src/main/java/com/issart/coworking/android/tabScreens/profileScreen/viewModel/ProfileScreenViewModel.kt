@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEach
 class ProfileScreenViewModel(
     private val addRoomInReservedUseCase: AddRoomInReservedUseCase,
     private val addRoomInHistoryUseCase: AddRoomInHistoryUseCase
-):ViewModel() {
+) : ViewModel() {
 
     private val _historyListState = MutableStateFlow<List<RoomUiState>?>(null)
     val historyListState = _historyListState.asStateFlow()

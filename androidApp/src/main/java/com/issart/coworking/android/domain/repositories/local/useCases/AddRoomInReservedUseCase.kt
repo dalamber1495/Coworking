@@ -19,5 +19,9 @@ class AddRoomInReservedUseCase(
         val rooms = roomRepository.addRoomInReserved(id, date, time)
         _roomData.emit(rooms)
     }
+    suspend fun remove(id: Int){
+        val rooms = roomRepository.removeRoomFromReserved(id)
+        _roomData.emit(rooms)
+    }
 
 }

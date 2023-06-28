@@ -22,10 +22,12 @@ import androidx.navigation.NavHostController
 import com.issart.coworking.android.R
 import com.issart.coworking.android.tabScreens.homeScreen.navigation.rootObject.HomeScreens
 import com.issart.coworking.android.tabScreens.homeScreen.payScreen.components.ClickableTextField
+import com.issart.coworking.android.tabScreens.homeScreen.payScreen.viewModel.PayScreenViewModel
 import com.issart.coworking.android.ui.*
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PayScreen(navController: NavHostController, id:Int?) {
+fun PayScreen(navController: NavHostController, id:Int?, payScreenViewModel: PayScreenViewModel = koinViewModel()) {
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -89,7 +91,10 @@ fun PayScreen(navController: NavHostController, id:Int?) {
                 contentColor = activeContentColor
             )
         }
-        Column(Modifier.fillMaxWidth().align(Alignment.BottomCenter)) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)) {
 
             Button(
                 modifier = Modifier
@@ -98,7 +103,8 @@ fun PayScreen(navController: NavHostController, id:Int?) {
                     .height(50.dp)
                     .indication(remember { MutableInteractionSource() }, null),
                 onClick = {
-                    navController.navigate(HomeScreens.ReservedScreenRoute.createRoute(id!!))
+                    payScreenViewModel.addRoomInReserved(id!!)
+                    navController.navigate(HomeScreens.ReservedScreenRoute.createRoute(id))
                 },
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(

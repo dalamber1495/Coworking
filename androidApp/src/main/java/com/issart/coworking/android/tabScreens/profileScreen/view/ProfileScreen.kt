@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -15,13 +16,19 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.issart.coworking.android.R
 import com.issart.coworking.android.tabScreens.homeScreen.payScreen.components.ClickableTextField
+import com.issart.coworking.android.tabScreens.profileScreen.components.RoomCard
+import com.issart.coworking.android.tabScreens.profileScreen.viewModel.ProfileScreenViewModel
 import com.issart.coworking.android.ui.backgroundColor
 import com.issart.coworking.android.ui.descriptionTextStyle
 import com.issart.coworking.android.ui.nameItemTextStyle
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(profileScreenViewModel: ProfileScreenViewModel = koinViewModel()) {
 
+
+    val historyState = profileScreenViewModel.historyListState.collectAsState()
+    val reservedState = profileScreenViewModel.reservedListState.collectAsState()
 
     Box(contentAlignment = Alignment.Center) {
         Column(
@@ -52,21 +59,32 @@ fun ProfileScreen() {
                             .background(color = backgroundColor.copy(alpha = 0.8f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(modifier = Modifier.fillMaxWidth().padding(start = 32.dp) , text = "Профиль", style = descriptionTextStyle)
+                        Text(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 32.dp) , text = "Профиль", style = descriptionTextStyle)
 
                     }
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            ClickableTextField(modifier = Modifier.fillMaxWidth().height(52.dp), iconResourse = R.drawable.ic_email, text = "mikhail.nekrasov@gmail.com")
+            ClickableTextField(modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp), iconResourse = R.drawable.ic_email, text = "mikhail.nekrasov@gmail.com")
             Spacer(modifier = Modifier.height(24.dp))
             Text(modifier = Modifier.fillMaxWidth(), text = "Текущие бронирования", style = nameItemTextStyle, fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(16.dp))
 
-
+            reservedState.value?.asReversed()?.forEach {
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomCard(room = it)
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(modifier = Modifier.fillMaxWidth(), text = "История", style = nameItemTextStyle, fontSize = 24.sp)
 
+            historyState.value?.asReversed()?.forEach{
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomCard(room = it)
+            }
+            Spacer(modifier = Modifier.height(100.dp))
 
 
 

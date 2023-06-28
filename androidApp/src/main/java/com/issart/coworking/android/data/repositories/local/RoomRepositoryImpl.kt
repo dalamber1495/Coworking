@@ -69,7 +69,7 @@ class RoomRepositoryImpl : RoomRepository {
     ) :List<RoomUiState>{
         val room = roomList[id]
         room?.let {
-            historyList.add(it)
+            historyList.add(it.copy(date = date, time = time))
             if (historyList.size > 10)
                 historyList.removeFirst()
         }
@@ -83,8 +83,13 @@ class RoomRepositoryImpl : RoomRepository {
     ): List<RoomUiState> {
         val room = roomList[id]
         room?.let {
-            reservedList.add(it)
+            reservedList.add(it.copy(date = date, time = time))
         }
+        return reservedList
+    }
+
+    override suspend fun removeRoomFromReserved(id: Int):List<RoomUiState> {
+        reservedList.removeIf{it.id == id}
         return reservedList
     }
 
