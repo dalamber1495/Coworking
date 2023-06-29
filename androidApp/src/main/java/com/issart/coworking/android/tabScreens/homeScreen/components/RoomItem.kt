@@ -60,20 +60,20 @@ fun RoomItem(modifier: Modifier = Modifier, room: RoomUiState, onClickLike:()->U
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
-            Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.TopEnd) {
-
-                Icon(
-                    painter =
-                    painterResource(id = if (room.like) com.issart.coworking.android.R.drawable.heart_fill  else com.issart.coworking.android.R.drawable.heart),
-                    modifier = Modifier.padding(end = 10.dp, top = 10.dp).size(23.dp)
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = onClickLike),
-                    contentDescription = null,
-                    tint = activeContentColor
-                )
-
-            }
+//            Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.TopEnd) {
+//
+//                Icon(
+//                    painter =
+//                    painterResource(id = if (room.like) com.issart.coworking.android.R.drawable.heart_fill  else com.issart.coworking.android.R.drawable.heart),
+//                    modifier = Modifier.padding(end = 10.dp, top = 10.dp).size(23.dp)
+//                        .clickable(interactionSource = remember {
+//                            MutableInteractionSource()
+//                        }, indication = null, onClick = onClickLike),
+//                    contentDescription = null,
+//                    tint = activeContentColor
+//                )
+//
+//            }
         }
     }
     Spacer(Modifier.height(16.dp))

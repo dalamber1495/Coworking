@@ -66,7 +66,7 @@ fun DetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(modifier = Modifier.clickable {
@@ -86,12 +86,12 @@ fun DetailScreen(
                         color = fontDescriptionColor
                     )
                 }
-                Icon(
-                    modifier = Modifier.clickable { onEvent.invoke(DetailScreenEvents.SetLikeOnRoom(!state.value.like)) },
-                    imageVector = ImageVector.vectorResource(id = if (!state.value.like) R.drawable.heart else R.drawable.heart_fill),
-                    contentDescription = null,
-                    tint =  activeContentColor
-                )
+//                Icon(
+//                    modifier = Modifier.clickable { onEvent.invoke(DetailScreenEvents.SetLikeOnRoom(!state.value.like)) },
+//                    imageVector = ImageVector.vectorResource(id = if (!state.value.like) R.drawable.heart else R.drawable.heart_fill),
+//                    contentDescription = null,
+//                    tint =  activeContentColor
+//                )
             }
         }
         Row(
