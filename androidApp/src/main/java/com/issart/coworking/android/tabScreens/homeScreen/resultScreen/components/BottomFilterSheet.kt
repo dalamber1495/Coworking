@@ -19,6 +19,7 @@ import com.issart.coworking.android.tabScreens.homeScreen.resultScreen.data.Resu
 import com.issart.coworking.android.ui.activeContentColor
 import com.issart.coworking.android.ui.backgroundColor
 import com.issart.coworking.android.ui.buttonTextStyle
+import com.issart.coworking.android.ui.inactiveContentColor
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
@@ -82,7 +83,7 @@ fun BottomFilterSheet(
         modifier = Modifier.wrapContentSize(),
         elevation = 2.dp,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        border = BorderStroke(1.dp, color = activeContentColor)
+        border = BorderStroke(1.dp, color = inactiveContentColor)
     ) {
         Box(
             modifier = Modifier
@@ -101,7 +102,7 @@ fun BottomFilterSheet(
                 Spacer(modifier = Modifier.height(8.dp))
                 Divider(
                     modifier = Modifier.width(35.dp),
-                    color = activeContentColor,
+                    color = inactiveContentColor,
                     thickness = 3.dp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
