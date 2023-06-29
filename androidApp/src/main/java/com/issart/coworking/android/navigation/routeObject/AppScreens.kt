@@ -17,6 +17,7 @@ const val routeGraph = "routeGraph"
 
 const val mainGraph = "mainGraph"
 
+const val splashScreenRoute = "splashScreenRoute"
 
 
 sealed class AppScreens(

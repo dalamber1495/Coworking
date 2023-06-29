@@ -16,11 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.issart.coworking.android.MyApplicationTheme
 import com.issart.coworking.android.navigation.AppNavigation
-import com.issart.coworking.android.navigation.routeObject.popRouteName
 import com.issart.coworking.android.navigation.graphs.authGraph
-import com.issart.coworking.android.navigation.routeObject.AppScreens
-import com.issart.coworking.android.navigation.routeObject.nonLoggedUserGraph
-import com.issart.coworking.android.navigation.routeObject.routeGraph
+import com.issart.coworking.android.navigation.routeObject.*
+import com.issart.coworking.android.startScreen.splashScreen.view.SplashScreenView
 import com.issart.coworking.android.tabScreens.MainScreen
 import com.issart.coworking.android.ui.backgroundColor
 import kotlinx.coroutines.flow.launchIn
@@ -67,10 +65,12 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navigationController,
                         route = routeGraph,
-                        startDestination = startingGraph
+                        startDestination = splashScreenRoute
                     ) {
 
-
+                        composable(route = splashScreenRoute){
+                            SplashScreenView(navigator = navigationController, startingGraph = startingGraph)
+                        }
                         authGraph(navigationController)
                         composable(route = AppScreens.MainAppScreen.route) {
                             MainScreen()
