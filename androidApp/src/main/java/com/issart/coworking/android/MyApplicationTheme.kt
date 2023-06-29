@@ -70,7 +70,7 @@ fun MyApplicationTheme(
         typography = typography,
         content = {
             val systemUiController = rememberSystemUiController()
-            systemUiController.setStatusBarColor(Color.Transparent,true)
+            systemUiController.setStatusBarColor(Color.Transparent,false)
             systemUiController.setNavigationBarColor(Color.Transparent,darkIcons = false, navigationBarContrastEnforced = false)
             content.invoke()
         }
